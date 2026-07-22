@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 1 — The Three Trees</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  /* Lesson-specific: the three-trees diagram. */
+  .trees{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;margin:2rem 0 1rem;text-align:center}
+  .tree{border:1px solid var(--rule);border-radius:6px;padding:.9rem .6rem;background:#fff}
+  .tree h4{margin:0 0 .3rem;font-size:.95rem}
+  .tree .alias{font-family:ui-monospace,Consolas,monospace;font-size:.72rem;color:var(--ink-soft)}
+  .tree p{font-size:.82rem;color:var(--ink-soft);margin:.5rem 0 0;max-width:none}
+  .tree.w{border-top:3px solid #b45309}
+  .tree.s{border-top:3px solid #6d28d9}
+  .tree.r{border-top:3px solid #2f6f4f}
+  .flow{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;font-family:ui-monospace,Consolas,monospace;
+        font-size:.78rem;text-align:center;color:var(--ink-soft);margin-bottom:2.5rem}
+  .flow span{background:var(--code-bg);border-radius:4px;padding:.35rem}
+  @media (max-width:560px){.trees,.flow{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<p class="eyebrow">Lesson 01 · foundation</p>
+<h1>The Three Trees</h1>
+<p class="subtitle">Where your changes actually live — and why <code>git status</code> stops being noise.</p>
+
+<p>You already run <code>add</code>, <code>commit</code>, <code>push</code>. This lesson gives you the map underneath them. Everything later in this workspace — undoing mistakes, branching, resolving a conflict, reviewing a teammate's PR — is a movement between the three places below. Learn these once and the rest is bookkeeping.</p>
+
+<h2>The map</h2>
+
+<div class="trees">
+  <div class="tree w">
+    <h4>Working Directory</h4>
+    <div class="alias">the files you edit</div>
+    <p>Your actual folder on disk. The only tree your editor can see.</p>
+  </div>
+  <div class="tree s">
+    <h4>Staging Area</h4>
+    <div class="alias">a.k.a. the <em>index</em></div>
+    <p>A draft of your next commit. You assemble it deliberately.</p>
+  </div>
+  <div class="tree r">
+    <h4>Repository</h4>
+    <div class="alias">the <code>.git</code> folder</div>
+    <p>Permanent history. Every committed snapshot lives here forever.</p>
+  </div>
+</div>
+
+<div class="flow">
+  <span>working → staging &nbsp;<strong>git add</strong></span>
+  <span>staging → repository &nbsp;<strong>git commit</strong></span>
+</div>
+
+<p>The staging area is the piece most people never form a picture of, and it is the whole reason Git feels fussy compared to "save file". Its purpose: <strong>a commit should be a deliberate, coherent unit — not a dump of everything you happened to touch.</strong> You edited three unrelated things this afternoon? Stage and commit them separately. The staging area is where you decide.</p>
+
+<blockquote class="note">
+  <span class="label">Pro Git, 2.2</span>
+  "The staging area is a file … that stores information about what will go into your next commit." A commit records the snapshot <em>you set up in the staging area</em> — not the current state of your folder.
+  <br><a href="https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository">Recording Changes to the Repository →</a>
+</blockquote>
+
+<h2>Reading <code>git status</code></h2>
+
+<p>Run it. Every line is telling you which tree a file is sitting in:</p>
+
+<pre><code>$ git status
+On branch main
+
+Changes to be committed:        <span style="color:#6d28d9">← in the STAGING AREA</span>
+        modified:   auth.js
+
+Changes not staged for commit:  <span style="color:#b45309">← in the WORKING DIR only</span>
+        modified:   README.md
+
+Untracked files:                <span style="color:#b45309">← working dir, Git has never seen it</span>
+        notes.txt</code></pre>
+
+<p>Three sections, three trees. <code>auth.js</code> is queued for the next commit. <code>README.md</code> is edited but will <em>not</em> be included. <code>notes.txt</code> Git isn't even watching yet.</p>
+
+<div class="note">
+  <span class="label">Tracked vs. untracked</span>
+  A <strong>tracked</strong> file is one that was in the last snapshot (or has been staged). Everything else is <strong>untracked</strong> — Git ignores it entirely until a <code>git add</code> brings it in. This is why a new file needs <code>add</code> even the very first time.
+</div>
+
+<h3>The same thing in VS Code</h3>
+
+<table>
+  <tr><th>CLI</th><th>VS Code Source Control panel</th></tr>
+  <tr><td><code>git status</code></td><td>The panel itself — it is a permanent <code>git status</code></td></tr>
+  <tr><td>“Changes not staged” / “Untracked”</td><td>the <span class="gui">Changes</span> group</td></tr>
+  <tr><td>“Changes to be committed”</td><td>the <span class="gui">Staged Changes</span> group</td></tr>
+  <tr><td><code>git add &lt;file&gt;</code></td><td>the <span class="gui">+</span> icon on a file row</td></tr>
+  <tr><td><code>git restore --staged &lt;file&gt;</code></td><td>the <span class="gui">−</span> icon on a staged row</td></tr>
+</table>
+
+<p>If you have ever hit Commit in VS Code with nothing in <span class="gui">Staged Changes</span> and been asked "do you want to stage all your changes?" — that prompt is the staging area asking you to stop skipping it.</p>
+
+<h2>The two diffs</h2>
+
+<p>Because there are three trees, there are two gaps between them — and therefore two different diffs. This trips up almost everyone:</p>
+
+<pre><code>git diff              # working dir vs. STAGING — what you have NOT staged yet
+git diff --staged     # staging vs. LAST COMMIT — what you are ABOUT to commit</code></pre>
+
+<div class="warn">
+  <span class="label">The classic confusion</span>
+  You stage everything with <code>git add .</code>, then run <code>git diff</code> and it prints nothing. Nothing is broken. <code>git diff</code> compares working dir to staging, and after <code>git add .</code> those two are identical. You wanted <code>git diff --staged</code>.
+</div>
+
+<p>Habit worth building now, before your first team PR: run <code>git diff --staged</code> immediately before every commit. It is a five-second review of exactly what you are about to put into permanent history — and it catches stray debug lines and pasted secrets while they are still cheap to remove.</p>
+
+<div class="quiz" data-title="Retrieval practice — answer before scrolling back"
+  data-quiz='[
+    {"q":"You edit README.md and run git commit -m \"docs\". What lands in the commit?","a":["Nothing at all changes","README.md gets committed"],"correct":0,"why":"README.md was never staged, so the staging area is unchanged from the last commit. Git commits the staging area, not your folder — it reports nothing to commit."},
+    {"q":"git add moves a change from where, to where?","a":["Repository into staging","Working dir into staging"],"correct":1,"why":"add copies the current working-directory content of a file into the staging area — the draft of your next commit."},
+    {"q":"You stage a file, then edit it again. What does the next commit contain?","a":["The version you staged","The version on disk"],"correct":0,"why":"Staging snapshots content at the moment you ran add. Later edits sit unstaged — the file will show in BOTH status sections until you add it again."},
+    {"q":"Which command shows what you are about to commit?","a":["git diff --staged here","git diff --plain here"],"correct":0,"why":"git diff --staged (aka --cached) compares the staging area to the last commit. Plain git diff compares working dir to staging — the other gap."},
+    {"q":"A brand-new file shows as untracked. What does that mean?","a":["Git is not watching it","Git saw it, ignored it"],"correct":0,"why":"Untracked means the file was not in the last snapshot and has never been staged. Git leaves it alone entirely until you add it."}
+  ]'></div>
+
+<h2>Do this now (5 minutes, in a real repo)</h2>
+
+<p>Reading this does not make it stick — typing it does. In any scratch repo:</p>
+
+<pre><code>echo "one"   > a.txt
+echo "two"   > b.txt
+git status              # both untracked
+
+git add a.txt
+git status              # a.txt staged, b.txt still untracked
+
+echo "one-changed" > a.txt
+git status              # a.txt appears in BOTH sections — read that carefully
+
+git diff                # shows the "one-changed" edit  (working vs staging)
+git diff --staged       # shows the original "one"      (staging vs last commit)
+
+git commit -m "add a"
+git status              # only b.txt remains</code></pre>
+
+<p>The step to sit with is the fourth one: a single file listed in two sections at once. That is only possible because staging holds a <em>copy</em>, not a pointer to your file. Once that feels obvious, this lesson has done its job.</p>
+
+<div class="win">
+  <span class="label">Your win</span>
+  You can now read <code>git status</code> as a location report rather than a wall of text, and you know which of the two diffs to reach for. Every "undo" command you learn next is defined by which tree it touches — so this map is the prerequisite for the whole recovery playbook.
+</div>
+
+<h2>Go deeper</h2>
+
+<p><strong>Primary source — read this one:</strong> <a href="https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository">Pro Git §2.2, "Recording Changes to the Repository"</a>. Fifteen minutes, and it is the authoritative version of everything above. The file-lifecycle diagram near the top is worth committing to memory.</p>
+
+<div class="footer">
+  <p><strong>Reference:</strong> <a href="../reference/git-glossary.html">Git Glossary</a> — terms introduced here: working directory, staging area, repository, tracked, untracked, index, snapshot.</p>
+  <p><strong>Next up:</strong> what a commit <em>is</em> (a snapshot plus a parent pointer), and the undo playbook built on it.</p>
+  <p class="no-print"><strong>Stuck on anything?</strong> Ask your teacher — that's the agent in this workspace. Half-formed questions are fine and usually the most useful ones. If a step above behaved differently than described, paste the output and ask.</p>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

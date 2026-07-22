@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Learning Git — Course Index</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .card{display:block;border:1px solid var(--rule);border-radius:6px;padding:1rem 1.2rem;
+        margin:.75rem 0;background:#fff;text-decoration:none;color:inherit;transition:border-color .12s,background .12s}
+  .card:hover{border-color:var(--accent);background:var(--accent-soft)}
+  .card .num{font-family:ui-monospace,Consolas,monospace;font-size:.72rem;letter-spacing:.12em;
+             color:var(--accent);display:block;margin-bottom:.2rem}
+  .card h3{margin:0;font-size:1.05rem}
+  .card p{margin:.3rem 0 0;font-size:.9rem;color:var(--ink-soft);max-width:none}
+  .card .terms{font-family:ui-monospace,Consolas,monospace;font-size:.72rem;color:var(--ink-soft);
+               margin-top:.5rem;display:block}
+  .planned{border-style:dashed;background:#fbfaf6;opacity:.7;cursor:default}
+  .planned:hover{border-color:var(--rule);background:#fbfaf6}
+</style>
+</head>
+<body>
+
+<p class="eyebrow">Course index</p>
+<h1>Learning Git</h1>
+<p class="subtitle">Two goals: never lose solo work, and collaborate in a shared repo without fear. Every lesson traces back to one of them.</p>
+
+<h2>Lessons</h2>
+
+<a class="card" href="lessons/0001-the-three-trees.html">
+  <span class="num">Lesson 01 · foundation</span>
+  <h3>The Three Trees</h3>
+  <p>Where changes actually live — working directory, staging area, repository — and why <code>git status</code> stops being noise.</p>
+  <span class="terms">working dir · staging area · index · tracked · untracked · the two diffs</span>
+</a>
+
+<div class="card planned">
+  <span class="num">Lesson 02 · planned</span>
+  <h3>What a Commit Really Is</h3>
+  <p>Snapshot plus a parent pointer. The graph model that makes every undo command predictable.</p>
+  <span class="terms">commit · HEAD · parent · branch as pointer</span>
+</div>
+
+<h2>Reference</h2>
+
+<a class="card" href="reference/git-glossary.html">
+  <span class="num">Reference · living</span>
+  <h3>Git Glossary</h3>
+  <p>Canonical definitions used across all lessons, plus a CLI ↔ VS Code mapping table. Print this one.</p>
+</a>
+
+<h2>Workspace</h2>
+
+<table>
+  <tr><th>File</th><th>What it holds</th></tr>
+  <tr><td><a href="MISSION.md">MISSION.md</a></td><td>Why you're learning Git. Grounds every teaching decision.</td></tr>
+  <tr><td><a href="RESOURCES.md">RESOURCES.md</a></td><td>Trusted sources — Pro Git, Learn Git Branching, communities.</td></tr>
+  <tr><td><a href="NOTES.md">NOTES.md</a></td><td>Your preferences and the teaching notes behind them.</td></tr>
+  <tr><td><a href="learning-records/">learning-records/</a></td><td>What's been established — drives what gets taught next.</td></tr>
+</table>
+
+<div class="footer">
+  <p><strong>Primary source throughout:</strong> <a href="https://git-scm.com/book/en/v2">Pro Git, 2nd edition</a> — free, official, authoritative.</p>
+  <p><strong>Practice sandbox:</strong> <a href="https://learngitbranching.js.org/">Learn Git Branching</a> — visual, in-browser, real commands.</p>
+  <p class="no-print"><strong>Ready for the next lesson, or stuck on this one?</strong> Ask your teacher — the agent in this workspace.</p>
+</div>
+
+</body>
+</html>

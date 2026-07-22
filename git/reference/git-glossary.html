@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reference — Git Glossary</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  dl{margin:1.5rem 0}
+  dt{font-family:ui-monospace,Consolas,monospace;font-weight:600;font-size:.95rem;
+     margin-top:1.1rem;color:var(--accent)}
+  dd{margin:.25rem 0 0;max-width:var(--measure)}
+  dd .aka{color:var(--ink-soft);font-style:italic}
+</style>
+</head>
+<body>
+
+<p class="eyebrow">Reference · living document</p>
+<h1>Git Glossary</h1>
+<p class="subtitle">The canonical definitions used across every lesson in this workspace. Git overloads ordinary words; when a lesson says "staging area", it means exactly what is written here.</p>
+
+<h2>The three trees</h2>
+<dl>
+  <dt>working directory</dt>
+  <dd>The project folder as it exists on disk right now. The only tree your editor sees or edits. <span class="aka">Also: working tree.</span></dd>
+
+  <dt>staging area</dt>
+  <dd>A draft of the next commit, assembled deliberately with <code>git add</code>. Holds a <em>copy</em> of file content, taken at the moment you staged it — not a live pointer to the file. <span class="aka">Also: the index, the cache (hence <code>--cached</code>).</span></dd>
+
+  <dt>repository</dt>
+  <dd>The <code>.git</code> directory: every committed snapshot, every branch pointer, all of history. Deleting it deletes the history while leaving your files.</dd>
+</dl>
+
+<h2>File states</h2>
+<dl>
+  <dt>tracked</dt>
+  <dd>A file that was in the last snapshot, or has been staged. Git watches it for changes. Each tracked file is <em>unmodified</em>, <em>modified</em>, or <em>staged</em>.</dd>
+
+  <dt>untracked</dt>
+  <dd>A file Git has never been told about. It appears in <code>git status</code> under "Untracked files" and is otherwise ignored — never committed, never affected by branch switches.</dd>
+
+  <dt>snapshot</dt>
+  <dd>What a commit stores: the full state of every tracked file at that moment. Git records snapshots, not diffs — the diffs you see are computed on demand by comparing two snapshots.</dd>
+</dl>
+
+<h2>Commands, by which trees they touch</h2>
+<table>
+  <tr><th>Command</th><th>Moves</th><th>Effect</th></tr>
+  <tr><td><code>git add &lt;file&gt;</code></td><td>working → staging</td><td>Copies current content into the next-commit draft.</td></tr>
+  <tr><td><code>git commit</code></td><td>staging → repository</td><td>Writes the staged draft into history permanently.</td></tr>
+  <tr><td><code>git status</code></td><td>reads all three</td><td>Reports which tree each changed file is sitting in.</td></tr>
+  <tr><td><code>git diff</code></td><td>working vs. staging</td><td>What you have <em>not</em> staged yet.</td></tr>
+  <tr><td><code>git diff --staged</code></td><td>staging vs. last commit</td><td>What you are <em>about</em> to commit. <span class="aka">--cached is a synonym.</span></tr>
+  <tr><td><code>git restore --staged &lt;f&gt;</code></td><td>repository → staging</td><td>Unstages: drops the file from the draft, keeps your edits on disk.</td></tr>
+</table>
+
+<h2>CLI ↔ VS Code</h2>
+<table>
+  <tr><th>CLI concept</th><th>VS Code Source Control</th></tr>
+  <tr><td>unstaged + untracked changes</td><td><span class="gui">Changes</span> group</td></tr>
+  <tr><td>staging area</td><td><span class="gui">Staged Changes</span> group</td></tr>
+  <tr><td><code>git add</code></td><td><span class="gui">+</span> on a file row</td></tr>
+  <tr><td><code>git restore --staged</code></td><td><span class="gui">−</span> on a staged row</td></tr>
+</table>
+
+<div class="footer">
+  <p>Terms are added here as lessons introduce them. Source of truth for definitions: <a href="https://git-scm.com/docs/gitglossary">the official gitglossary</a> and <a href="https://git-scm.com/book/en/v2">Pro Git</a>.</p>
+  <p><strong>Introduced in:</strong> <a href="../lessons/0001-the-three-trees.html">Lesson 01 — The Three Trees</a>.</p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Learning — Courses</title>
+<!-- ponytail: borrows the Git course stylesheet rather than duplicating one.
+     Promote to ./assets/style.css when a second course lands. -->
+<link rel="stylesheet" href="git/assets/style.css">
+<style>
+  .card{display:block;border:1px solid var(--rule);border-radius:6px;padding:1.1rem 1.3rem;
+        margin:.75rem 0;background:#fff;text-decoration:none;color:inherit;
+        transition:border-color .12s,background .12s}
+  .card:hover{border-color:var(--accent);background:var(--accent-soft)}
+  .card .num{font-family:ui-monospace,Consolas,monospace;font-size:.72rem;letter-spacing:.12em;
+             color:var(--accent);display:block;margin-bottom:.2rem}
+  .card h3{margin:0;font-size:1.15rem}
+  .card p{margin:.35rem 0 0;font-size:.92rem;color:var(--ink-soft);max-width:none}
+  .card .meta{font-family:ui-monospace,Consolas,monospace;font-size:.72rem;
+              color:var(--ink-soft);margin-top:.6rem;display:block}
+</style>
+</head>
+<body>
+
+<p class="eyebrow">Workspace root</p>
+<h1>Courses</h1>
+<p class="subtitle">Each course is its own teaching workspace — a mission, trusted resources, lessons, and a reference shelf.</p>
+
+<a class="card" href="git/index.html">
+  <span class="num">Course · in progress</span>
+  <h3>Git</h3>
+  <p>Never lose solo work, and collaborate in a shared repo without fear. Built on the commit graph, not command recipes.</p>
+  <span class="meta">1 lesson · 1 reference · Pro Git as primary source</span>
+</a>
+
+<div class="footer">
+  <p>Start a new course with <code>/teach &lt;topic&gt;</code> from a fresh directory here. One mission per workspace — unrelated goals get their own folder.</p>
+</div>
+
+</body>
+</html>
