@@ -43,6 +43,24 @@
   <dd>What a commit stores: the full state of every tracked file at that moment. Git records snapshots, not diffs — the diffs you see are computed on demand by comparing two snapshots.</dd>
 </dl>
 
+<h2>The commit graph</h2>
+<dl>
+  <dt>commit object</dt>
+  <dd>What <code>git commit</code> creates: a pointer to a snapshot, pointer(s) to its parent commit(s), and metadata (author, message). Immutable once written.</dd>
+
+  <dt>parent</dt>
+  <dd>The commit(s) directly before a given commit. Zero parents = the initial commit; one = a normal commit; two or more = a merge commit. Parent pointers face <em>backward</em>, threading commits into history.</dd>
+
+  <dt>branch</dt>
+  <dd>"A lightweight movable pointer to one commit" (Pro Git). A label, not a copy of files. Committing advances it. Creating one writes a ~40-byte pointer, so it's instant.</dd>
+
+  <dt>HEAD</dt>
+  <dd>A pointer to the branch you're currently on — Git's "you are here". <code>git switch</code> re-points HEAD. When HEAD points straight at a commit instead of a branch, you're in <em>detached HEAD</em>.</dd>
+
+  <dt>SHA (hash)</dt>
+  <dd>A commit's real name: a 40-char fingerprint of its content, usually shown as the first 7 chars (<code>7a8b9c</code>). Identical content → identical SHA, which is how Git compares histories.</dd>
+</dl>
+
 <h2>Commands, by which trees they touch</h2>
 <table>
   <tr><th>Command</th><th>Moves</th><th>Effect</th></tr>
@@ -65,7 +83,7 @@
 
 <div class="footer">
   <p>Terms are added here as lessons introduce them. Source of truth for definitions: <a href="https://git-scm.com/docs/gitglossary">the official gitglossary</a> and <a href="https://git-scm.com/book/en/v2">Pro Git</a>.</p>
-  <p><strong>Introduced in:</strong> <a href="../lessons/0001-the-three-trees.html">Lesson 01 — The Three Trees</a>.</p>
+  <p><strong>Introduced in:</strong> <a href="../lessons/0001-the-three-trees.html">Lesson 01 — The Three Trees</a> · <a href="../lessons/0002-what-a-commit-is.html">Lesson 02 — What a Commit Really Is</a>.</p>
 </div>
 
 </body>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 2 — What a Commit Really Is</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  /* Lesson-specific: the commit-graph diagram, built from divs so it prints cleanly. */
+  .graph{margin:2rem 0;overflow-x:auto}
+  .row{display:flex;align-items:center;gap:.35rem;font-family:ui-monospace,Consolas,monospace;
+       font-size:.8rem;white-space:nowrap;padding:.15rem 0}
+  .node{border:1px solid var(--rule);border-radius:5px;padding:.35rem .55rem;background:#fff;text-align:center}
+  .node .sha{color:var(--accent);font-weight:600}
+  .node .msg{color:var(--ink-soft);font-size:.72rem}
+  .arrow{color:var(--ink-soft)}
+  .ptr{border-radius:999px;padding:.2rem .55rem;font-weight:600;font-size:.74rem;color:#fff}
+  .ptr.branch{background:#2f6f4f}
+  .ptr.head{background:#6d28d9}
+  .caption{font-size:.8rem;color:var(--ink-soft);margin-top:.4rem;font-style:italic}
+  @media (max-width:560px){.row{font-size:.72rem}}
+</style>
+</head>
+<body>
+
+<p class="eyebrow">Lesson 02 · foundation</p>
+<h1>What a Commit Really Is</h1>
+<p class="subtitle">A snapshot with a parent. Once you see the graph, every undo command becomes predictable instead of scary.</p>
+
+<p>In <a href="0001-the-three-trees.html">Lesson 01</a> you learned where changes live before they're committed. This lesson is about what <code>git commit</code> actually <em>creates</em> — because the shape of that thing is the whole reason branching, merging, and "undo" work the way they do. Get this and you stop memorizing recipes; you start reasoning about the graph.</p>
+
+<h2>A commit is three things bolted together</h2>
+
+<p>When you commit, Git stores one <strong>commit object</strong>. Per the Pro Git book, it contains:</p>
+
+<table>
+  <tr><th>Part</th><th>What it is</th></tr>
+  <tr><td>snapshot</td><td>A pointer to the <em>complete</em> state of every tracked file at that moment — not a diff.</td></tr>
+  <tr><td>parent(s)</td><td>A pointer to the commit(s) that came directly before. This is what threads commits into history.</td></tr>
+  <tr><td>metadata</td><td>Author name + email, and the message you typed.</td></tr>
+</table>
+
+<div class="note">
+  <span class="label">The idea that unlocks everything</span>
+  Each commit points backward to its parent. A commit is a snapshot <em>plus a pointer to the one before it</em>. String those pointers together and you get history — a chain, running from newest back to the very first commit (which has zero parents).
+</div>
+
+<blockquote class="note">
+  <span class="label">Pro Git, 3.1</span>
+  A commit object contains "a pointer to the snapshot of the content you staged … and pointers to the commit or commits that directly came before this commit (its parent or parents): zero parents for the initial commit, one parent for a normal commit, and multiple parents for a commit that results from a merge."
+  <br><a href="https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell">Branches in a Nutshell →</a>
+</blockquote>
+
+<h2>Snapshots, not diffs</h2>
+
+<p>This is the single biggest way Git differs from older tools (SVN, CVS) and from how most people imagine it. Git does <strong>not</strong> store "line 4 changed". Every commit stores the full tree. Unchanged files are just re-pointed to the identical stored content, so it costs nothing — but conceptually, <strong>each commit is a complete photo of the project.</strong></p>
+
+<div class="win">
+  <span class="label">Why this matters for your mission</span>
+  Because every commit is a full, self-contained snapshot, you can jump to any one of them and get the entire project exactly as it was. That is the mechanism behind "never lose work" — every commit is a save point you can return to whole.
+</div>
+
+<h2>A branch is just a sticky note on a commit</h2>
+
+<p>Here is the part that makes branches stop being scary. Pro Git's exact words:</p>
+
+<blockquote class="note">
+  "A branch in Git is simply a lightweight movable pointer to one of these commits."
+</blockquote>
+
+<p>That's the entire definition. <code>main</code> is not a copy of your files. It is not a folder. It is a <strong>label pointing at one commit</strong> — a sticky note stuck to the latest commit on that line of work. Creating a branch writes a new 40-byte pointer; that's why it's instant.</p>
+
+<div class="graph">
+  <div class="row">
+    <span class="node"><span class="sha">a1b2c3</span><br><span class="msg">initial</span></span>
+    <span class="arrow">←</span>
+    <span class="node"><span class="sha">d4e5f6</span><br><span class="msg">add auth</span></span>
+    <span class="arrow">←</span>
+    <span class="node"><span class="sha">7a8b9c</span><br><span class="msg">fix login</span></span>
+    <span class="ptr branch">main</span>
+    <span class="ptr head">HEAD</span>
+  </div>
+  <div class="caption">Arrows point to parents (backward). <code>main</code> labels the newest commit; <code>HEAD</code> says "you are here".</div>
+</div>
+
+<h3>HEAD = "you are here"</h3>
+
+<p>One more pointer completes the picture. <strong><code>HEAD</code> is a pointer to the branch you're currently on.</strong> It's Git's "you are here" marker on the map. When you run <code>git switch main</code>, all that changes is HEAD now points at <code>main</code>.</p>
+
+<p>Now watch what one commit does. You're on <code>main</code>, you commit "add logout":</p>
+
+<div class="graph">
+  <div class="row">
+    <span class="node"><span class="sha">7a8b9c</span><br><span class="msg">fix login</span></span>
+    <span class="arrow">←</span>
+    <span class="node"><span class="sha">e0f1a2</span><br><span class="msg">add logout</span></span>
+    <span class="ptr branch">main</span>
+    <span class="ptr head">HEAD</span>
+  </div>
+  <div class="caption">New commit's parent is the old tip. Then <code>main</code> slides forward to it, and <code>HEAD</code> rides along.</div>
+</div>
+
+<p>Committing does two moves, every time: (1) create a snapshot whose parent is wherever HEAD currently points, (2) advance the current branch pointer to the new commit. Nothing else. Branching, merging, resetting — all of it is moving these little pointers around a graph of immutable snapshots.</p>
+
+<h2>See it in your own repo</h2>
+
+<pre><code>git log --oneline --graph --all --decorate</code></pre>
+
+<p>Memorize this command — it's the single most useful view in Git and you'll live in it once you're on a team. Each line is a commit; the labels in parentheses are the branch pointers and <code>HEAD</code>. You are literally reading the graph from the diagrams above.</p>
+
+<table>
+  <tr><th>Flag</th><th>Does</th></tr>
+  <tr><td><code>--oneline</code></td><td>One compact line per commit (short SHA + message).</td></tr>
+  <tr><td><code>--graph</code></td><td>Draws the parent arrows as ASCII lines on the left.</td></tr>
+  <tr><td><code>--all</code></td><td>Show every branch, not just the current one.</td></tr>
+  <tr><td><code>--decorate</code></td><td>Print the branch / HEAD labels (on by default in modern Git).</td></tr>
+</table>
+
+<div class="warn">
+  <span class="label">Watch the wording</span>
+  A short SHA like <code>7a8b9c</code> <em>is</em> the commit's real name — a fingerprint of its content. Two different snapshots can never share one. This is why Git can tell instantly whether your teammate's history matches yours: same SHAs, same history.
+</div>
+
+<h3>The same thing in VS Code</h3>
+<table>
+  <tr><th>CLI</th><th>VS Code</th></tr>
+  <tr><td><code>git log --graph --all</code></td><td>The <span class="gui">Git Graph</span> extension, or Source Control ▸ <span class="gui">⋯ ▸ View History</span></td></tr>
+  <tr><td>current branch (where HEAD points)</td><td>the branch name in the <span class="gui">bottom-left status bar</span></td></tr>
+  <tr><td><code>git switch &lt;branch&gt;</code></td><td>click that status-bar branch name ▸ pick from the list</td></tr>
+</table>
+
+<div class="quiz" data-title="Retrieval practice — answer before scrolling back"
+  data-quiz='[
+    {"q":"What does a single commit store about the project files?","a":["Only the lines changed","A full project snapshot"],"correct":1,"why":"Git stores snapshots, not diffs. Every commit references the complete state of all tracked files; unchanged files just re-point to identical stored content."},
+    {"q":"What is a branch, precisely?","a":["A movable commit pointer","A copy of the files"],"correct":0,"why":"Pro Git: a branch is a lightweight movable pointer to one commit. Not a folder, not a copy — a 40-byte label, which is why branching is instant."},
+    {"q":"What does HEAD point to, normally?","a":["The oldest commit made","The branch you are on"],"correct":1,"why":"HEAD is a pointer to your current branch — the you-are-here marker. Switching branches just re-points HEAD."},
+    {"q":"You commit on main. What two moves happen?","a":["Snapshot made, main advances","Files copied, HEAD resets"],"correct":0,"why":"A snapshot is created with its parent = old tip, then the current branch pointer (main) advances to it and HEAD rides along. Always those two moves."},
+    {"q":"Which direction do a commit’s parent pointers face?","a":["Forward to newer ones","Backward to older ones"],"correct":1,"why":"Each commit points to the commit(s) before it. History is a backward chain from newest to the parentless initial commit."}
+  ]'></div>
+
+<h2>Do this now (5 minutes, in a real repo)</h2>
+
+<pre><code>git log --oneline --graph --all --decorate   # read the labels: where is HEAD? where is main?
+
+git switch -c experiment      # new branch pointer at the SAME commit; HEAD now on experiment
+git log --oneline --all       # main and experiment sit on the identical commit
+
+echo "hi" > x.txt && git add x.txt && git commit -m "on experiment"
+git log --oneline --graph --all --decorate    # experiment moved forward; main stayed put
+
+git switch main               # HEAD re-points to main — x.txt vanishes from your folder
+git log --oneline --graph --all --decorate    # same graph, HEAD label jumped back</code></pre>
+
+<p>The moment to sit with: after <code>git switch main</code>, <code>x.txt</code> disappears from disk — not deleted, just not part of the snapshot <code>main</code> points to. Switch back to <code>experiment</code> and it returns. You're watching pointers move over immutable snapshots. Nothing is ever lost; you're just changing which photo is on the table.</p>
+
+<div class="win">
+  <span class="label">Your win</span>
+  You can now read <code>git log --graph</code> as an actual graph of pointers, and you know a branch is a cheap movable label. Next lesson — the undo playbook — is nothing but "move HEAD or a branch pointer to an earlier commit," which only makes sense now that you can see the pointers.
+</div>
+
+<h2>Go deeper</h2>
+<p><strong>Primary source — read this one:</strong> <a href="https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell">Pro Git §3.1, "Branches in a Nutshell"</a>. It walks the exact same pointer diagrams with Git's own illustrations. Ten minutes and the model is airtight.</p>
+<p><strong>Then play:</strong> <a href="https://learngitbranching.js.org/">Learn Git Branching</a>, intro sequence. It animates these pointers as you type real commands — the fastest way to make the graph intuition stick.</p>
+
+<div class="footer">
+  <p><strong>Reference:</strong> <a href="../reference/git-glossary.html">Git Glossary</a> — new terms: commit object, snapshot vs. diff, parent, branch, HEAD, SHA.</p>
+  <p><strong>Previous:</strong> <a href="0001-the-three-trees.html">Lesson 01 — The Three Trees</a> · <strong>Index:</strong> <a href="../index.html">all lessons</a></p>
+  <p><strong>Next up:</strong> the undo playbook — <code>amend</code>, <code>restore</code>, <code>reset</code> (soft/mixed/hard), and <code>reflog</code>, each defined by which pointer or tree it touches.</p>
+  <p class="no-print"><strong>Anything fuzzy?</strong> Ask your teacher — the agent in this workspace. "Wait, why did x.txt disappear?" is exactly the right kind of question.</p>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
