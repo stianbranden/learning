@@ -72,6 +72,27 @@
   <tr><td><code>git restore --staged &lt;f&gt;</code></td><td>repository → staging</td><td>Unstages: drops the file from the draft, keeps your edits on disk.</td></tr>
 </table>
 
+<h2>Undoing things</h2>
+<dl>
+  <dt>git restore &lt;file&gt;</dt>
+  <dd>Discard working-directory edits to a file, reverting it to the last commit. <strong>Irreversible</strong> — the edits were never recorded anywhere.</dd>
+
+  <dt>git restore --staged &lt;file&gt;</dt>
+  <dd>Unstage: move a file out of the staging area back to the working dir. Your edits are kept; only the "queued for commit" status is removed.</dd>
+
+  <dt>git commit --amend</dt>
+  <dd>Replace the most recent commit with a new one — to fix its message or add a forgotten file. Rewrites history, so avoid on already-pushed commits.</dd>
+
+  <dt>reset (--soft / --mixed / --hard)</dt>
+  <dd>Move the current branch pointer to another commit, walking three steps: (1) move the pointer [<code>--soft</code> stops], (2) reset the index [<code>--mixed</code>, the default, stops], (3) reset the working dir [<code>--hard</code>]. Only <code>--hard</code> destroys uncommitted work.</dd>
+
+  <dt>git revert &lt;sha&gt;</dt>
+  <dd>Create a <em>new</em> commit that undoes the changes of an earlier one. History is preserved — the safe way to reverse a commit that's already been shared/pushed.</dd>
+
+  <dt>reflog</dt>
+  <dd>A log of every position <code>HEAD</code> has held. Lets you recover commits you "lost" with <code>reset</code> — the orphaned commit stays retrievable for weeks. Can't recover edits that were never committed.</dd>
+</dl>
+
 <h2>CLI ↔ VS Code</h2>
 <table>
   <tr><th>CLI concept</th><th>VS Code Source Control</th></tr>
@@ -83,7 +104,7 @@
 
 <div class="footer">
   <p>Terms are added here as lessons introduce them. Source of truth for definitions: <a href="https://git-scm.com/docs/gitglossary">the official gitglossary</a> and <a href="https://git-scm.com/book/en/v2">Pro Git</a>.</p>
-  <p><strong>Introduced in:</strong> <a href="../lessons/0001-the-three-trees.html">Lesson 01 — The Three Trees</a> · <a href="../lessons/0002-what-a-commit-is.html">Lesson 02 — What a Commit Really Is</a>.</p>
+  <p><strong>Introduced in:</strong> <a href="../lessons/0001-the-three-trees.html">Lesson 01 — The Three Trees</a> · <a href="../lessons/0002-what-a-commit-is.html">Lesson 02 — What a Commit Really Is</a> · <a href="../lessons/0003-the-undo-playbook.html">Lesson 03 — The Undo Playbook</a>.</p>
 </div>
 
 </body>

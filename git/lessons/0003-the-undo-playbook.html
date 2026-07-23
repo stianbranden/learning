@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 3 — The Undo Playbook</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  /* Lesson-specific: the reset three-steps ladder. */
+  .steps{margin:1.5rem 0;border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+  .step{display:flex;align-items:center;gap:.75rem;padding:.7rem 1rem;border-bottom:1px solid var(--rule);font-size:.9rem}
+  .step:last-child{border-bottom:none}
+  .step .n{font-family:ui-monospace,Consolas,monospace;font-weight:600;color:#fff;background:var(--accent);
+           border-radius:5px;padding:.15rem .5rem;font-size:.78rem;flex:none}
+  .step .stop{margin-left:auto;font-family:ui-monospace,Consolas,monospace;font-size:.72rem;
+              color:var(--ink-soft);flex:none;text-align:right}
+  .s-soft{background:#eef6f1}
+  .s-mixed{background:#fdf3ec}
+  .s-hard{background:#fbeeee}
+  .scenario{border-left:3px solid var(--accent);padding:.4rem 0 .4rem 1rem;margin:1.25rem 0}
+  .scenario .sit{font-weight:600;margin:0 0 .3rem}
+  .scenario pre{margin:.4rem 0 0}
+  @media (max-width:560px){.step .stop{display:none}}
+</style>
+</head>
+<body>
+
+<p class="eyebrow">Lesson 03 · solo safety</p>
+<h1>The Undo Playbook</h1>
+<p class="subtitle">Every "I made a mistake" fix, sorted by which tree or pointer it touches. This is the lesson that kills the panic.</p>
+
+<p>This is the payoff of the first mission goal: <strong>never lose work, undo anything without googling.</strong> It works because you already have the map. Every command below is just moving a pointer or overwriting one of the <a href="0001-the-three-trees.html">three trees</a> — nothing new, only recombination. The trick is matching the mistake to the tree it lives in.</p>
+
+<div class="note">
+  <span class="label">The one habit that makes all of this safe</span>
+  Before any undo you're unsure about, run <code>git status</code> and <code>git log --oneline --graph --all</code>. Know where you are before you move. Every fix below is reversible <em>except</em> throwing away uncommitted working-directory changes — so that's the only category to slow down for.
+</div>
+
+<h2>The playbook, by mistake</h2>
+
+<div class="scenario">
+  <p class="sit">"I staged a file I didn't mean to."</p>
+  <p>Change lives in the <strong>staging area</strong>. Move it back to working dir — edits on disk untouched.</p>
+  <pre><code>git restore --staged &lt;file&gt;        <span style="color:#55534d"># unstage, keep the edit</span></code></pre>
+</div>
+
+<div class="scenario">
+  <p class="sit">"I want to throw away my edits to a file and go back to the last commit."</p>
+  <p>Change lives in the <strong>working directory</strong>. This one <em>destroys</em> the edit — there's no undo. Be sure.</p>
+  <pre><code>git restore &lt;file&gt;                  <span style="color:#9b2226"># discard working-dir edits — irreversible</span></code></pre>
+</div>
+
+<div class="scenario">
+  <p class="sit">"My last commit message has a typo / I forgot to add a file."</p>
+  <p>The commit is fine, you just want to redo it. <code>--amend</code> replaces the top commit with a new one.</p>
+  <pre><code>git commit --amend -m "better message"
+<span style="color:#55534d"># or: stage the forgotten file first, then:</span>
+git add forgotten.js
+git commit --amend --no-edit       <span style="color:#55534d"># keep the old message</span></code></pre>
+</div>
+
+<div class="scenario">
+  <p class="sit">"I committed too early — I want the commit undone but my work kept."</p>
+  <p>Move the branch pointer back one, leave the trees. That's <code>reset</code> — covered in full next.</p>
+  <pre><code>git reset --soft HEAD~1            <span style="color:#55534d"># uncommit, changes stay STAGED</span>
+git reset HEAD~1                   <span style="color:#55534d"># uncommit, changes go to working dir (unstaged)</span></code></pre>
+</div>
+
+<div class="scenario">
+  <p class="sit">"I already pushed / shared the commit and want to reverse it."</p>
+  <p><strong>Don't</strong> rewrite shared history. Add a new commit that undoes the old one. Safe on a team.</p>
+  <pre><code>git revert &lt;sha&gt;                    <span style="color:#55534d"># new commit that inverts &lt;sha&gt;; history preserved</span></code></pre>
+</div>
+
+<div class="warn">
+  <span class="label">reset vs. revert — the team rule</span>
+  <code>reset</code> rewrites history (moves the pointer, old commits fall off). Great <em>before</em> you push. <code>revert</code> adds a new inverse commit, leaving history intact — the right tool <em>after</em> a commit is shared. Rewriting history someone else has already pulled is how you create the merge nightmares your teammates blame Git for.
+</div>
+
+<h2>reset, demystified</h2>
+
+<p><code>reset</code> is the command people fear, because <code>--soft</code>, <code>--mixed</code>, <code>--hard</code> look arbitrary. They're not. Pro Git frames <code>reset</code> as walking down <strong>three steps</strong>, stopping where you tell it:</p>
+
+<div class="steps">
+  <div class="step s-soft"><span class="n">1</span> Move the branch HEAD points to <span class="stop">⟵ <code>--soft</code> stops here</span></div>
+  <div class="step s-mixed"><span class="n">2</span> Make the index (staging) look like HEAD <span class="stop">⟵ <code>--mixed</code> (default) stops here</span></div>
+  <div class="step s-hard"><span class="n">3</span> Make the working directory look like the index <span class="stop">⟵ <code>--hard</code> goes all the way</span></div>
+</div>
+
+<blockquote class="note">
+  <span class="label">Pro Git, 7.7 — Reset Demystified</span>
+  reset "overwrites these three trees in a specific order, stopping when you tell it to: (1) Move the branch HEAD points to — stop here if <code>--soft</code>. (2) Make the index look like HEAD — stop here unless <code>--hard</code>. (3) Make the working directory look like the index."
+  <br><a href="https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified">Reset Demystified →</a>
+</blockquote>
+
+<table>
+  <tr><th>Command</th><th>Branch ptr</th><th>Staging</th><th>Working dir</th><th>Use when</th></tr>
+  <tr><td><code>reset --soft</code></td><td>moves</td><td>—</td><td>—</td><td>Uncommit; keep everything staged, ready to recommit.</td></tr>
+  <tr><td><code>reset</code> <em>(--mixed)</em></td><td>moves</td><td>reset</td><td>—</td><td>Uncommit <em>and</em> unstage; edits stay on disk. The default.</td></tr>
+  <tr><td><code>reset --hard</code></td><td>moves</td><td>reset</td><td>reset</td><td>Nuke it all back to a commit. <strong>Destroys uncommitted work.</strong></td></tr>
+</table>
+
+<div class="warn">
+  <span class="label">⚠ The only dangerous one</span>
+  Pro Git: <code>--hard</code> is "the only way to make the <code>reset</code> command dangerous, and one of the very few cases where Git will actually destroy data." <code>--soft</code> and <code>--mixed</code> never touch your working directory — your edits are safe. Say the flag out loud before you hit enter.
+</div>
+
+<h2>The safety net: reflog</h2>
+
+<p>Here's the fact that should let you sleep. <strong>Git almost never truly deletes a commit.</strong> When you <code>reset</code> "away" a commit, the commit object still exists — you've only moved the branch label off it. The <code>reflog</code> is a log of everywhere <code>HEAD</code> has been, so you can find that orphaned commit and jump back.</p>
+
+<pre><code>git reflog                          <span style="color:#55534d"># every position HEAD has held, newest first</span>
+<span style="color:#55534d"># find the line before your mistake, e.g. "d4e5f6 HEAD@{2}: commit: good work"</span>
+git reset --hard d4e5f6             <span style="color:#55534d"># or: git switch -c rescue d4e5f6</span></code></pre>
+
+<div class="win">
+  <span class="label">Why this ends the panic</span>
+  A bad <code>reset --hard</code> feels like disaster. But the commit you reset off is still in <code>reflog</code> for weeks (until garbage collection). "I lost a commit" is almost always "I moved a pointer and can move it back." The one thing reflog can <em>not</em> save: uncommitted edits that were never a commit. Which is the whole argument for committing early and often.
+</div>
+
+<h3>The same thing in VS Code</h3>
+<table>
+  <tr><th>CLI</th><th>VS Code</th></tr>
+  <tr><td><code>git restore --staged &lt;f&gt;</code></td><td><span class="gui">−</span> on the staged row (Unstage Changes)</td></tr>
+  <tr><td><code>git restore &lt;f&gt;</code></td><td>right-click a changed file ▸ <span class="gui">Discard Changes</span></td></tr>
+  <tr><td><code>git commit --amend</code></td><td>Source Control ▸ <span class="gui">⋯ ▸ Commit ▸ Commit (Amend)</span></td></tr>
+  <tr><td><code>git revert &lt;sha&gt;</code></td><td>right-click a commit in history ▸ <span class="gui">Revert Commit</span></td></tr>
+  <tr><td><code>reset</code> / <code>reflog</code></td><td>no safe GUI button — use the terminal for these</td></tr>
+</table>
+
+<div class="quiz" data-title="Retrieval practice — answer before scrolling back"
+  data-quiz='[
+    {"q":"Which reset flag can destroy uncommitted working-directory edits?","a":["reset --hard destroys","reset --soft destroys"],"correct":0,"why":"Only --hard runs step 3 (overwrite the working directory). --soft and --mixed never touch it, so your edits survive."},
+    {"q":"A commit is already pushed. How do you reverse it safely?","a":["git revert the commit","git reset the commit"],"correct":0,"why":"revert adds a new inverse commit, leaving shared history intact. reset rewrites history — dangerous once others have pulled it."},
+    {"q":"reset --soft HEAD~1 leaves your changes where?","a":["Discarded from disk","Staged, ready again"],"correct":1,"why":"--soft stops after step 1: only the branch pointer moves. The index still matches your work, so changes stay staged."},
+    {"q":"You ran a bad reset --hard. First thing to try?","a":["git reflog to find it","git status to fix it"],"correct":0,"why":"reflog lists every past HEAD position, including the commit you reset off. Reset or branch back to its SHA to recover it."},
+    {"q":"Which mistake is the one truly irreversible category?","a":["Uncommitted edits discarded","A commit reset away"],"correct":0,"why":"A commit reset away survives in reflog for weeks. Uncommitted edits were never a commit — nothing recorded them, so restore/hard erases them for good."}
+  ]'></div>
+
+<h2>Do this now (5 minutes, in a scratch repo)</h2>
+
+<pre><code>git init undo-drill && cd undo-drill
+echo one > f.txt && git add f.txt && git commit -m "c1"
+echo two >> f.txt && git commit -am "c2 — the mistake"
+
+git log --oneline                   <span style="color:#55534d"># two commits</span>
+git reset --soft HEAD~1             <span style="color:#55534d"># undo c2</span>
+git status                          <span style="color:#55534d"># "two" change is STAGED again — soft kept it</span>
+
+git commit -m "c2 redone"          <span style="color:#55534d"># recommit cleanly</span>
+git reset --hard HEAD~1            <span style="color:#9b2226"># nuke back to c1 — the change is gone from disk</span>
+cat f.txt                          <span style="color:#55534d"># just "one"</span>
+
+git reflog                         <span style="color:#55534d"># see c2 still listed — pick its SHA...</span>
+git reset --hard &lt;sha-of-c2&gt;       <span style="color:#55534d"># ...and it's back. Nothing was ever truly lost.</span></code></pre>
+
+<p>The whole lesson is in those last two lines: you destroyed a commit with <code>--hard</code>, then walked it back out of <code>reflog</code>. Do that once and <code>reset</code> stops being scary forever.</p>
+
+<div class="win">
+  <span class="label">Your win</span>
+  You have a mistake-to-command lookup table, you know the one dangerous flag by name, and you know the reflog safety net exists. That's the solo-safety half of the mission essentially handled. Next we turn to the team half — branching and merging for real.
+</div>
+
+<h2>Go deeper</h2>
+<p><strong>Primary source — read this one:</strong> <a href="https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified">Pro Git §7.7, "Reset Demystified"</a>. The best explanation of <code>reset</code> that exists, with tree-by-tree diagrams. Worth a slow read — it's the command most worth truly understanding.</p>
+<p>Also skim <a href="https://git-scm.com/book/en/v2/Git-Basics-Undoing-Things">§2.4, "Undoing Things"</a> for <code>--amend</code> and <code>restore</code> in the book's own words.</p>
+
+<div class="footer">
+  <p><strong>Reference:</strong> <a href="../reference/git-glossary.html">Git Glossary</a> — new terms: restore, amend, reset (soft/mixed/hard), revert, reflog.</p>
+  <p><strong>Previous:</strong> <a href="0002-what-a-commit-is.html">Lesson 02 — What a Commit Really Is</a> · <strong>Index:</strong> <a href="../index.html">all lessons</a></p>
+  <p><strong>Next up:</strong> branching &amp; merging for real — fast-forward vs. three-way merge, and resolving your first conflict start to finish.</p>
+  <p class="no-print"><strong>Nervous about any of these commands?</strong> Ask your teacher — the agent in this workspace. Best question to bring: "if I run X, what happens to each of the three trees?"</p>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
