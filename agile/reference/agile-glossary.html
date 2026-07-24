@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agile Glossary — Reference</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="ref">
+
+<p class="eyebrow">Reference · Agile</p>
+<h1>Glossary</h1>
+<p class="subtitle">Every term pinned to its primary source, not to the industry folk meaning. If a lesson uses a word from this list, it means <em>this</em>, and nothing looser.</p>
+
+<div class="note">
+  <span class="label">Why this card exists</span>
+  Agile vocabulary is over-familiar and hollowed out by misuse. "Sprint" gets used for "deadline", "MVP" for "the cheapest thing we can get away with", "kanban" for "a board with columns". Each definition below is quoted or tightly paraphrased from the document that actually defines it — the link is the authority, not this page.
+</div>
+
+<h2>Slicing work</h2>
+
+<dl>
+  <dt>Vertical slice</dt>
+  <dd>A piece of work that cuts through <em>every</em> layer needed to be usable — data, logic, interface — however narrowly. Its opposite is a horizontal slice (one whole layer, useful to nobody until the others land). Bill Wake's rule: when splitting, "slice vertically through technical layers rather than horizontally to preserve customer value". <a class="src" href="https://xp123.com/invest-in-good-stories-and-smart-tasks/">Wake, INVEST</a></dd>
+
+  <dt>Increment</dt>
+  <dd>Scrum's word for the output of a slice: "a concrete stepping stone toward the Product Goal… each Increment is additive to all prior Increments and verified, ensuring that all Increments work together." Work that isn't usable isn't an Increment. <a class="src" href="https://scrumguides.org/">Scrum Guide 2020</a></dd>
+
+  <dt>Definition of Done (DoD)</dt>
+  <dd>"A formal description of the state of the Increment when it meets the quality measures required for the product." Not a checklist of tasks — a bar that decides whether a thing counts as finished at all. Mandatory in Scrum since 2020. <a class="src" href="https://scrumguides.org/">Scrum Guide 2020</a></dd>
+
+  <dt>INVEST</dt>
+  <dd>Six qualities of a good story: <strong>I</strong>ndependent, <strong>N</strong>egotiable, <strong>V</strong>aluable, <strong>E</strong>stimable, <strong>S</strong>mall, <strong>T</strong>estable. Testable means: "I understand what I want well enough that I could write a test for it." <a class="src" href="https://xp123.com/invest-in-good-stories-and-smart-tasks/">Wake, 2003</a></dd>
+
+  <dt>Elephant carpaccio</dt>
+  <dd>Cockburn's name for slicing a problem into 15–20 stages where you thought there were three. "All of the slicing decisions are based on the business situation, not the technology aspects." <a class="src" href="https://alistaircockburn.com/Elephant-Carpaccio">Cockburn</a></dd>
+
+  <dt>Earliest Testable / Usable / Lovable</dt>
+  <dd>Kniberg's replacement for the overloaded "MVP": the first release you can learn from, the first early adopters will willingly use, the first they'd tell friends about. Three different targets — say which one you mean. <a class="src" href="https://blog.crisp.se/2016/01/25/henrikkniberg/making-sense-of-mvp">Kniberg, 2016</a></dd>
+</dl>
+
+<h2>Flow (Kanban)</h2>
+
+<p>These four are the <em>mandatory</em> flow metrics — Kanban requires all four, and they are defined precisely enough to argue with.</p>
+
+<table>
+  <tr><th>Term</th><th>Definition</th></tr>
+  <tr><td><strong>WIP</strong></td><td>"Any work items between a started point and a finished point." Counted, not weighted.</td></tr>
+  <tr><td><strong>Throughput</strong></td><td>"The number of work items finished per unit of time… the exact count of work items."</td></tr>
+  <tr><td><strong>Cycle time</strong></td><td>"The elapsed time between when a work item started and when a work item finished."</td></tr>
+  <tr><td><strong>Work item age</strong></td><td>"The elapsed time between when a work item started and the current date." The only one of the four that tells you about work still in flight.</td></tr>
+</table>
+<p><a class="src" href="https://kanbanguides.org/the-kanban-guide/">All four: The Kanban Guide</a></p>
+
+<dl>
+  <dt>Definition of Workflow (DoW)</dt>
+  <dd>"The explicit shared understanding of flow among Kanban system members" — where work starts, where it finishes, and what the states in between mean. Solo, this is still worth writing down: it is what makes "started" and "finished" mean the same thing on Tuesday as on Friday. <a class="src" href="https://kanbanguides.org/the-kanban-guide/">Kanban Guide</a></dd>
+
+  <dt>Service Level Expectation (SLE)</dt>
+  <dd>"A forecast of how long it should take a work item to flow from started to finished", stated as a time <em>and</em> a probability — e.g. "85% of work items will be finished in eight days or less". This is what replaces estimating, once you have cycle-time data. <a class="src" href="https://kanbanguides.org/the-kanban-guide/">Kanban Guide</a></dd>
+
+  <dt>The three Kanban practices</dt>
+  <dd>1. Defining and visualizing a workflow. 2. Actively managing items in a workflow. 3. Improving a workflow. That is the whole method — the board is an implementation detail. <a class="src" href="https://kanbanguides.org/the-kanban-guide/">Kanban Guide</a></dd>
+</dl>
+
+<h2>Cadence (Scrum, Shape Up)</h2>
+
+<dl>
+  <dt>Sprint</dt>
+  <dd>A fixed-length timebox of one month or less in which a usable Increment is created. Scrum's container event — all other events happen inside it. A Sprint is <em>not</em> a deadline handed down, and its length does not change to fit the work. <a class="src" href="https://scrumguides.org/">Scrum Guide 2020</a></dd>
+
+  <dt>Sprint Goal</dt>
+  <dd>The single objective for the Sprint. Mandatory since 2020. It is what makes scope negotiable mid-Sprint: the goal holds, the item list can flex. <a class="src" href="https://scrumguides.org/">Scrum Guide 2020</a></dd>
+
+  <dt>Appetite</dt>
+  <dd>Shape Up's replacement for an estimate: how much time the outcome is <em>worth</em>, decided before the design exists. "Appetites start with a number and end with a design; estimates start with a design and end with a number." Fixed time, variable scope. <a class="src" href="https://basecamp.com/shapeup">Singer, Shape Up</a></dd>
+</dl>
+
+<div class="footer">
+  <p><strong>Related:</strong> <a href="./splitting-patterns.html">Splitting patterns card</a> ·
+     <a href="../lessons/0001-the-vertical-slice.html">Lesson 01 — The Vertical Slice</a> ·
+     <a href="../index.html">Course index</a></p>
+  <p>Terms get added here as lessons introduce them. If a lesson uses a word that isn't on this card, that's a bug — tell your teacher.</p>
+</div>
+
+</body>
+</html>

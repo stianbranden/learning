@@ -1,0 +1,256 @@
+/* Shared stylesheet for the Agile teaching workspace.
+   Tufte-adjacent: generous margins, restrained palette, print-friendly.
+   Same system as the Git workspace, different accent so the two courses
+   are never mistaken for each other. */
+
+:root {
+  --ink: #1a1a18;
+  --ink-soft: #55534d;
+  --paper: #fffef9;
+  --rule: #dcd8cc;
+  --accent: #1d4e6b;      /* deep slate blue — headings, emphasis */
+  --accent-soft: #eef4f7;
+  --ok: #2f6f4f;
+  --ok-soft: #eef6f1;
+  --bad: #9b2226;
+  --bad-soft: #fbeeee;
+  --code-bg: #f4f1e8;
+  --measure: 38rem;
+}
+
+* { box-sizing: border-box; }
+
+html { font-size: 17px; }
+
+body {
+  margin: 0 auto;
+  padding: 3rem 1.5rem 6rem;
+  max-width: 46rem;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Typography ---------- */
+
+h1, h2, h3 { line-height: 1.2; font-weight: 600; }
+
+h1 {
+  font-size: 2.1rem;
+  margin: 0 0 .25rem;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: 1.35rem;
+  margin: 3rem 0 .75rem;
+  padding-bottom: .35rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+h3 { font-size: 1.05rem; margin: 1.75rem 0 .5rem; }
+
+p, li { max-width: var(--measure); }
+
+.subtitle {
+  font-style: italic;
+  color: var(--ink-soft);
+  margin: 0 0 2rem;
+  font-size: 1.05rem;
+}
+
+.eyebrow {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
+  font-size: .72rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 .6rem;
+}
+
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+/* ---------- Code ---------- */
+
+code, kbd, pre, .mono {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
+}
+
+code {
+  background: var(--code-bg);
+  padding: .1em .35em;
+  border-radius: 3px;
+  font-size: .87em;
+}
+
+pre {
+  background: var(--code-bg);
+  border-left: 3px solid var(--accent);
+  padding: .9rem 1.1rem;
+  overflow-x: auto;
+  font-size: .85rem;
+  line-height: 1.55;
+  border-radius: 0 4px 4px 0;
+}
+
+pre code { background: none; padding: 0; font-size: inherit; }
+
+/* ---------- Callouts ---------- */
+
+.note, .warn, .win {
+  border-left: 3px solid var(--rule);
+  padding: .85rem 1.1rem;
+  margin: 1.5rem 0;
+  font-size: .95rem;
+  border-radius: 0 4px 4px 0;
+}
+
+.note { background: var(--accent-soft); border-left-color: var(--accent); }
+.warn { background: var(--bad-soft); border-left-color: var(--bad); }
+.win  { background: var(--ok-soft);  border-left-color: var(--ok); }
+
+.note > :first-child, .warn > :first-child, .win > :first-child { margin-top: 0; }
+.note > :last-child,  .warn > :last-child,  .win > :last-child  { margin-bottom: 0; }
+
+.label {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: .7rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: .35rem;
+  opacity: .8;
+}
+
+/* ---------- Source chip ----------
+   Marks a claim as traceable to a primary source. */
+
+.src {
+  display: inline-block;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: .72rem;
+  background: #eef1f6;
+  color: #33415c;
+  border: 1px solid #d5dbe6;
+  border-radius: 999px;
+  padding: .05rem .5rem;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.src:hover { background: #e2e8f2; }
+
+/* ---------- Reveal (native <details>, no JS) ----------
+   Used for "try it first, then compare" exercises. The delay before
+   revealing is the desirable difficulty — don't make it one click too easy. */
+
+.reveal {
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: .8rem 1.1rem;
+  margin: 1.25rem 0;
+  background: #fff;
+}
+.reveal > summary {
+  cursor: pointer;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: .78rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  list-style: none;
+}
+.reveal > summary::-webkit-details-marker { display: none; }
+.reveal > summary::before { content: "▸ "; }
+.reveal[open] > summary::before { content: "▾ "; }
+.reveal[open] > summary { margin-bottom: .75rem; }
+.reveal > :last-child { margin-bottom: 0; }
+
+/* ---------- Slice diagram ----------
+   Two stacks of architectural layers: one cut horizontally, one cut
+   vertically. Hand-built rather than a diagram library — it is four divs. */
+
+.slices { display: flex; gap: 1.5rem; flex-wrap: wrap; margin: 1.75rem 0; }
+.slices figure { margin: 0; flex: 1 1 14rem; }
+.slices figcaption {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: .72rem; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink-soft); margin-bottom: .5rem;
+}
+.stack { border: 1px solid var(--rule); border-radius: 5px; overflow: hidden; background: #fff; }
+.stack .layer {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: .76rem;
+  padding: .45rem .6rem;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+}
+.stack .layer:last-child { border-bottom: none; }
+.stack .cell { flex: 1; padding: .1rem .25rem; text-align: center; border-right: 1px dashed var(--rule); }
+.stack .cell:last-child { border-right: none; }
+.stack .done { background: var(--ok-soft); color: var(--ok); font-weight: 600; }
+.stack .todo { color: #b8b3a6; }
+.stack .horiz { background: var(--bad-soft); color: var(--bad); font-weight: 600; }
+
+/* ---------- Tables ---------- */
+
+table { border-collapse: collapse; width: 100%; margin: 1.5rem 0; font-size: .92rem; }
+th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+
+/* ---------- Reference-card layout ----------
+   Denser than a lesson. Reference docs are scanned, not read. */
+
+.ref table { font-size: .88rem; }
+.ref h2 { margin-top: 2.25rem; }
+.ref dt { font-weight: 600; margin-top: 1rem; }
+.ref dd { margin: .2rem 0 0; color: var(--ink-soft); max-width: var(--measure); font-size: .93rem; }
+
+/* ---------- Index cards ----------
+   Lives here rather than in a <style> block on the index, so any future
+   index (or a lesson listing related lessons) gets them for free. */
+
+.card {
+  display: block; border: 1px solid var(--rule); border-radius: 6px;
+  padding: 1rem 1.2rem; margin: .75rem 0; background: #fff;
+  text-decoration: none; color: inherit;
+  transition: border-color .12s, background .12s;
+}
+.card:hover { border-color: var(--accent); background: var(--accent-soft); }
+.card .num {
+  font-family: ui-monospace, Consolas, monospace; font-size: .72rem;
+  letter-spacing: .12em; color: var(--accent); display: block; margin-bottom: .2rem;
+}
+.card h3 { margin: 0; font-size: 1.05rem; }
+.card p { margin: .3rem 0 0; font-size: .9rem; color: var(--ink-soft); max-width: none; }
+.card .terms {
+  font-family: ui-monospace, Consolas, monospace; font-size: .72rem;
+  color: var(--ink-soft); margin-top: .5rem; display: block;
+}
+.planned { border-style: dashed; background: #fbfaf6; opacity: .7; cursor: default; }
+.planned:hover { border-color: var(--rule); background: #fbfaf6; }
+
+/* ---------- Footer / nav ---------- */
+
+.footer {
+  margin-top: 4rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule);
+  font-size: .9rem;
+  color: var(--ink-soft);
+}
+
+.footer a { font-weight: 600; }
+
+/* ---------- Print ---------- */
+
+@media print {
+  body { padding: 0; max-width: none; font-size: 11pt; }
+  .quiz, .no-print { display: none; }
+  .reveal[open] > summary { display: none; }
+  a::after { content: " (" attr(href) ")"; font-size: .75em; color: #666; }
+  .src::after { content: none; }
+  h2 { page-break-after: avoid; }
+  pre, table, .note, .warn, .win, .slices { page-break-inside: avoid; }
+}

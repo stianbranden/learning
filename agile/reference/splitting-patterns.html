@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Splitting Patterns — Reference</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="ref">
+
+<p class="eyebrow">Reference · Agile</p>
+<h1>Nine ways to cut a big thing</h1>
+<p class="subtitle">Print this. When a piece of work is too big and it isn't obvious how to cut it, run down the list in order and stop at the first pattern that fits.</p>
+
+<div class="note">
+  <span class="label">Source</span>
+  The nine patterns and their order come from the <a href="https://www.humanizingwork.com/the-humanizing-work-guide-to-splitting-user-stories/">Humanizing Work Guide to Splitting User Stories</a> (Richard Lawrence &amp; Peter Green). The evaluation criteria at the bottom are from the same guide and from <a href="https://xp123.com/invest-in-good-stories-and-smart-tasks/">Bill Wake's INVEST</a>.
+</div>
+
+<h2>The patterns, in the order to try them</h2>
+
+<table>
+  <tr><th>#</th><th>Pattern</th><th>Cut it by…</th><th>Smells like this when it fits</th></tr>
+
+  <tr><td>1</td><td><strong>Workflow steps</strong></td>
+      <td>Taking one step of a multi-step process end-to-end, and faking or deferring the rest.</td>
+      <td>The story describes a journey: "sign up → verify → onboard → invite team".</td></tr>
+
+  <tr><td>2</td><td><strong>Operations (CRUD)</strong></td>
+      <td>Splitting create / read / update / delete into separate slices.</td>
+      <td>The word "manage" appears. "Manage projects" is four stories wearing a coat.</td></tr>
+
+  <tr><td>3</td><td><strong>Business rule variations</strong></td>
+      <td>Shipping one rule, deferring the other rules that act on the same feature.</td>
+      <td>Lots of "except when…", "unless the user is…", "for annual plans…".</td></tr>
+
+  <tr><td>4</td><td><strong>Variations in data</strong></td>
+      <td>Supporting one data type, format, locale, or source first.</td>
+      <td>"…for any file type", "in all currencies", "from any provider".</td></tr>
+
+  <tr><td>5</td><td><strong>Data entry methods</strong></td>
+      <td>Building the crudest working interface first; fancier input later.</td>
+      <td>The hard part is the widget (drag-drop, autocomplete), not the behaviour behind it.</td></tr>
+
+  <tr><td>6</td><td><strong>Major effort</strong></td>
+      <td>Doing the first case that requires the infrastructure, then the cheap ones that reuse it.</td>
+      <td>"Pay by card, PayPal, or invoice" — the first payment method costs 80% of the work.</td></tr>
+
+  <tr><td>7</td><td><strong>Simple / complex</strong></td>
+      <td>Extracting the plain-vanilla scenario, deferring every edge case as its own slice.</td>
+      <td>You catch yourself saying "well, it also has to handle…".</td></tr>
+
+  <tr><td>8</td><td><strong>Defer performance</strong></td>
+      <td>Making it work, then making it fast / scalable / pretty.</td>
+      <td>The requirement has a number in it: "in under 200ms", "for 10k rows".</td></tr>
+
+  <tr><td>9</td><td><strong>Break out a spike</strong></td>
+      <td>Timeboxing an investigation, <em>then</em> splitting properly with what you learn.</td>
+      <td>You genuinely cannot see the shape of the work. Last resort — a spike ships nothing.</td></tr>
+</table>
+
+<div class="warn">
+  <span class="label">The trap</span>
+  Pattern 9 is where an unpracticed slicer goes first, because it feels like progress and requires no decisions. It is listed last for a reason: a spike produces knowledge, not a working increment. Use it only when patterns 1–8 genuinely don't apply.
+</div>
+
+<h2>Is the split any good?</h2>
+
+<p>Four tests. A split that fails the first one is usually not worth making.</p>
+
+<table>
+  <tr><th>Test</th><th>Ask</th></tr>
+  <tr><td><strong>Throwaway test</strong></td>
+      <td>Could I deprioritise or bin one of these pieces and still ship something worthwhile? If no piece is droppable, you cut along the wrong line — you produced steps, not slices.</td></tr>
+  <tr><td><strong>Vertical test</strong></td>
+      <td>Does each piece touch every layer it needs to be observable? "Build the schema" is not a slice.</td></tr>
+  <tr><td><strong>Balance test</strong></td>
+      <td>Are the pieces roughly the same size? Prefer a 2-2-2-2 split over a 5-3. Lopsided splits usually mean one piece is still hiding a whole story inside it.</td></tr>
+  <tr><td><strong>Testable test</strong></td>
+      <td>Can you state, in one sentence, what you'd check to know the piece is done? If not, it isn't understood well enough to start.</td></tr>
+</table>
+
+<h2>Two sentences to remember</h2>
+
+<div class="win">
+  <p><strong>Slice on the business situation, not the technology.</strong> Cockburn's rule from Elephant Carpaccio — the moment you start cutting by layer (backend / frontend / API), you have stopped slicing and started scheduling.</p>
+  <p style="margin-bottom:0"><strong>The good split is the one that lets you throw a piece away.</strong> That is the whole point of small batches: cheap discovery that you didn't need it.</p>
+</div>
+
+<div class="footer">
+  <p><strong>Related:</strong> <a href="./agile-glossary.html">Glossary</a> ·
+     <a href="../lessons/0001-the-vertical-slice.html">Lesson 01 — The Vertical Slice</a> ·
+     <a href="../index.html">Course index</a></p>
+</div>
+
+</body>
+</html>

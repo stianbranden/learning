@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 01 — The Vertical Slice</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<p class="eyebrow">Agile · Lesson 01</p>
+<h1>The Vertical Slice</h1>
+<p class="subtitle">Everything else in agile is a way of managing small batches. This lesson is about making the batches small — the one skill that still pays when you are the only person on the team.</p>
+
+<div class="note">
+  <span class="label">The win</span>
+  By the end of this page you will have taken one real thing you are building and cut it into four or more pieces, each of which you could finish in a day and actually <em>use</em>. Not four tasks. Four working things.
+</div>
+
+<h2>Why this first</h2>
+
+<p>You have no Scrum Master, no sprint review, no stakeholder to demo to. Almost every agile practice is a mechanism for getting feedback out of <em>other people</em> — and at a team of one, most of them quietly stop working.</p>
+
+<p>Small batches don't. They work because the feedback isn't social, it's structural: a thing either runs or it doesn't. The Agile Manifesto's first principle is "early and continuous delivery of valuable software", and its seventh is that "working software is the primary measure of progress" <a class="src" href="https://agilemanifesto.org/principles.html">12 Principles</a>. Solo, those two are the whole game. The rest is scaffolding for coordinating humans you don't have.</p>
+
+<p>So the question is only ever: <strong>how small can the next working thing be?</strong></p>
+
+<h2>Vertical, not horizontal</h2>
+
+<p>Take a feature — say, letting people sign in. There are two ways to cut it.</p>
+
+<div class="slices">
+  <figure>
+    <figcaption>Horizontal — layer at a time</figcaption>
+    <div class="stack">
+      <div class="layer"><span class="cell horiz">interface — all of it</span></div>
+      <div class="layer"><span class="cell todo">logic</span></div>
+      <div class="layer"><span class="cell todo">data</span></div>
+    </div>
+    <p style="font-size:.85rem;color:var(--ink-soft);margin-top:.5rem">One layer finished. Nothing works. Nothing to try, nothing to show, nothing learned.</p>
+  </figure>
+
+  <figure>
+    <figcaption>Vertical — thin slice, all layers</figcaption>
+    <div class="stack">
+      <div class="layer"><span class="cell done">form</span><span class="cell todo">reset</span><span class="cell todo">OAuth</span></div>
+      <div class="layer"><span class="cell done">check</span><span class="cell todo">token</span><span class="cell todo">link</span></div>
+      <div class="layer"><span class="cell done">users</span><span class="cell todo">codes</span><span class="cell todo">providers</span></div>
+    </div>
+    <p style="font-size:.85rem;color:var(--ink-soft);margin-top:.5rem">One narrow column finished. <em>You can log in.</em> Everything after this is an improvement to a working system.</p>
+  </figure>
+</div>
+
+<p>Bill Wake put the rule in one line back in 2003: when splitting, "slice vertically through technical layers rather than horizontally to preserve customer value" <a class="src" href="https://xp123.com/invest-in-good-stories-and-smart-tasks/">INVEST</a>. Alistair Cockburn's version is blunter — "all of the slicing decisions are based on the business situation, not the technology aspects" <a class="src" href="https://alistaircockburn.com/Elephant-Carpaccio">Elephant Carpaccio</a>.</p>
+
+<div class="warn">
+  <span class="label">The solo failure mode</span>
+  Horizontal slicing feels <em>more</em> efficient when you're alone — you're in the database, so you may as well do all the tables. That's the trap. Batching by layer means the first moment you find out the design is wrong is the moment all three layers are built. Every hour of that work was a bet placed before any evidence came in.
+</div>
+
+<h2>A worked cut</h2>
+
+<p>Feature: <strong>"users can sign in"</strong>. Most people see two or three pieces. Here are six, in the order you'd build them, each one usable the moment it lands:</p>
+
+<table>
+  <tr><th>#</th><th>Slice</th><th>Working at the end of it</th></tr>
+  <tr><td>1</td><td>Email + password, one hardcoded user, no storage</td><td>You can get past the door.</td></tr>
+  <tr><td>2</td><td>Real users table, hashed passwords, sign-up form</td><td>Other people can get in.</td></tr>
+  <tr><td>3</td><td>Session persists across reloads</td><td>Login means something.</td></tr>
+  <tr><td>4</td><td>Wrong-password and duplicate-email errors</td><td>It survives contact with users.</td></tr>
+  <tr><td>5</td><td>Password reset by emailed link</td><td>You stop doing support by hand.</td></tr>
+  <tr><td>6</td><td>Google sign-in as an alternative</td><td>Signup friction drops.</td></tr>
+</table>
+
+<p>Notice what slice 1 does: it is <em>obviously</em> incomplete, and it is still the most valuable hour of the six, because everything after it is now an edit to running code rather than a guess. And notice that slices 5 and 6 are droppable — you could ship without them and find out whether anyone asks. That droppability is the tell that the cut was made in the right place.</p>
+
+<div class="note">
+  <span class="label">Nine patterns, one card</span>
+  When it isn't obvious where to cut, you don't improvise — you run down a list. The nine standard splitting patterns live on <a href="../reference/splitting-patterns.html">the splitting patterns reference card</a>. The cut above used <em>simple/complex</em> (1), <em>major effort</em> (2), <em>business rule variations</em> (4) and <em>workflow steps</em> (5). Keep that card open for the exercise below.
+</div>
+
+<h2>Check yourself</h2>
+
+<p>Answer from memory. Getting one wrong here is worth more than getting it right by scrolling back up.</p>
+
+<div class="quiz" data-quiz='[
+  {
+    "q":"Which one is a vertical slice?",
+    "a":["Build the file upload endpoint","Upload a PNG, see thumbnail","Create the upload database tables","Style the file upload widget"],
+    "correct":1,
+    "why":"Only this one crosses every layer and leaves something observable. The other three are each one layer of a feature that does not exist yet — useful work, but nothing is usable until all of them land."
+  },
+  {
+    "q":"How would you cut \"users can manage projects\"?",
+    "a":["Split by workflow steps","Split by CRUD operations","Split by data variations","Split by business rules"],
+    "correct":1,
+    "why":"The word manage is a tell: it almost always hides create, read, update and delete wearing one coat. CRUD is pattern 2 on the card — and creating a project is worth shipping long before deleting one is."
+  },
+  {
+    "q":"Checkout is cut into: cart schema, payment API, wire up UI. What is wrong?",
+    "a":["The pieces are unequal sizes","No piece could be dropped","There are too few pieces","The pieces need more detail"],
+    "correct":1,
+    "why":"That is a horizontal cut with better handwriting. The throwaway test catches it: if you cannot bin any piece and still ship something worthwhile, you produced build steps, not slices."
+  },
+  {
+    "q":"In Scrum, what makes something an Increment?",
+    "a":["It is usable and additive","It is finished this sprint","It is approved by stakeholders","It is estimated and planned"],
+    "correct":0,
+    "why":"The 2020 Scrum Guide defines an Increment as a concrete stepping stone that is usable and additive to all prior Increments. Work that is not usable is not an Increment, no matter which sprint it finished in."
+  }
+]'></div>
+
+<h2>Now do it to your own work</h2>
+
+<p>This is the part that matters. Pick one real thing you intend to build in the next two weeks — the fuzzier and larger the better. Write it at the top of a page.</p>
+
+<details class="reveal">
+  <summary>Step 1 — cut it into four pieces. Try before opening.</summary>
+  <p>Run the card top-down: workflow steps → CRUD → business rules → data variations → entry methods → major effort → simple/complex → performance. <strong>Stop at the first pattern that fits.</strong> Don't search for the best one; the first one that fits is nearly always good enough, and hunting for elegance is how slicing turns into an afternoon of planning.</p>
+  <p>If nothing fits, your feature is probably two features. Write both down and cut them separately.</p>
+</details>
+
+<details class="reveal">
+  <summary>Step 2 — apply the four tests to your cut</summary>
+  <ul>
+    <li><strong>Throwaway:</strong> could you bin one piece and still have something worth shipping? If not, cut again.</li>
+    <li><strong>Vertical:</strong> does each piece leave something you can look at and use?</li>
+    <li><strong>Balance:</strong> roughly equal sizes? A 5-3 split usually means the 5 is hiding another story.</li>
+    <li><strong>Testable:</strong> one sentence per piece saying how you'd know it's done.</li>
+  </ul>
+</details>
+
+<details class="reveal">
+  <summary>Step 3 — the real test</summary>
+  <p>Look at piece #1. <strong>Could you finish it today?</strong></p>
+  <p>If no, it is still too big — cut that one piece again with a second pattern. Slices compose: a workflow-step split of a CRUD split is completely normal, and this is exactly how Cockburn's workshop gets to 15–20 pieces where people first saw three.</p>
+  <p>If yes: build it today. That is the whole lesson. Everything in the rest of this course — WIP limits, cycle time, sprints, appetite — is bookkeeping on top of a stream of finished slices. Without the slices there is nothing to keep books on.</p>
+</details>
+
+<div class="win">
+  <span class="label">Did it work?</span>
+  Tell your teacher what you cut and how the pieces came out. Slicing is judged, not calculated — a second pair of eyes on your first three or four real cuts is worth more than reading another article about it.
+</div>
+
+<h2>Read this next</h2>
+
+<p><strong>Primary source:</strong> <a href="https://www.humanizingwork.com/the-humanizing-work-guide-to-splitting-user-stories/">The Humanizing Work Guide to Splitting User Stories</a> — Richard Lawrence &amp; Peter Green. Twenty minutes, and the most practical page written on this topic. It has the flowchart the reference card compresses, plus worked examples for each of the nine patterns.</p>
+
+<p><strong>If you want the drill:</strong> <a href="https://blog.crisp.se/2013/07/25/henrikkniberg/elephant-carpaccio-facilitation-guide">The Elephant Carpaccio facilitation guide</a> — designed for groups, but the exercise (build a retail calculator in 15–20 demoable slices, five rounds of eight minutes) runs fine alone and is the sharpest deliberate practice available for this skill.</p>
+
+<div class="footer">
+  <p><strong>Reference:</strong> <a href="../reference/splitting-patterns.html">Nine splitting patterns</a> ·
+     <a href="../reference/agile-glossary.html">Glossary</a></p>
+  <p><strong>Next:</strong> flow — why finishing one slice beats starting three, and how to measure it. Ask when you're ready.</p>
+  <p>Anything on this page unclear, or does it collide with how you actually work? Ask. That's what your teacher is for — the lesson is a starting point, not the answer.</p>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
