@@ -72,6 +72,30 @@
   <tr><td><code>git restore --staged &lt;f&gt;</code></td><td>repository → staging</td><td>Unstages: drops the file from the draft, keeps your edits on disk.</td></tr>
 </table>
 
+<h2>Branching &amp; merging</h2>
+<dl>
+  <dt>git switch -c &lt;name&gt;</dt>
+  <dd>Create a new branch <em>and</em> move <code>HEAD</code> onto it in one step. Older spelling: <code>git checkout -b &lt;name&gt;</code> — identical effect. <code>git switch &lt;name&gt;</code> (no <code>-c</code>) switches to an existing branch.</dd>
+
+  <dt>diverge</dt>
+  <dd>Two branches have diverged when each has commits the other doesn't, back to a shared ancestor. Divergence is what forces a three-way merge instead of a fast-forward.</dd>
+
+  <dt>merge base</dt>
+  <dd>The most recent commit reachable from both branches being merged — their last common ancestor. Git compares each side against the merge base to work out what changed on each.</dd>
+
+  <dt>fast-forward</dt>
+  <dd>The simple merge: when the target branch is a direct ancestor of the one being merged (it never moved), Git just slides the branch pointer forward. No merge commit, history stays linear. Force a merge commit instead with <code>git merge --no-ff</code>.</dd>
+
+  <dt>three-way merge</dt>
+  <dd>The merge used when branches have diverged. Git reconciles three commits — the two branch tips and their merge base — and records the result. If both sides changed the same lines, it stops with a <em>conflict</em>.</dd>
+
+  <dt>merge commit</dt>
+  <dd>The commit a three-way merge creates: the only commit with <em>two</em> parents (the two tips it joined). Its second parent is what makes history fork and rejoin in <code>git log --graph</code>.</dd>
+
+  <dt>git branch -d &lt;name&gt;</dt>
+  <dd>Delete a branch pointer. Lowercase <code>-d</code> refuses unless the branch is already merged (a safety net); capital <code>-D</code> forces it. Deletes only the label — merged commits survive on the target branch.</dd>
+</dl>
+
 <h2>Undoing things</h2>
 <dl>
   <dt>git restore &lt;file&gt;</dt>
@@ -104,7 +128,7 @@
 
 <div class="footer">
   <p>Terms are added here as lessons introduce them. Source of truth for definitions: <a href="https://git-scm.com/docs/gitglossary">the official gitglossary</a> and <a href="https://git-scm.com/book/en/v2">Pro Git</a>.</p>
-  <p><strong>Introduced in:</strong> <a href="../lessons/0001-the-three-trees.html">Lesson 01 — The Three Trees</a> · <a href="../lessons/0002-what-a-commit-is.html">Lesson 02 — What a Commit Really Is</a> · <a href="../lessons/0003-the-undo-playbook.html">Lesson 03 — The Undo Playbook</a>.</p>
+  <p><strong>Introduced in:</strong> <a href="../lessons/0001-the-three-trees.html">Lesson 01 — The Three Trees</a> · <a href="../lessons/0002-what-a-commit-is.html">Lesson 02 — What a Commit Really Is</a> · <a href="../lessons/0003-the-undo-playbook.html">Lesson 03 — The Undo Playbook</a> · <a href="../lessons/0004-branching-and-merging.html">Lesson 04 — Branching &amp; Merging</a>.</p>
 </div>
 
 </body>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 4 — Branching &amp; Merging</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  /* Lesson-specific: little inline commit-graph diagrams built from spans. */
+  .graph{font-family:ui-monospace,Consolas,monospace;font-size:.82rem;line-height:1.7;
+         background:var(--code-bg);border-left:3px solid var(--accent);
+         padding:.9rem 1.1rem;border-radius:0 4px 4px 0;margin:1.25rem 0;white-space:pre;overflow-x:auto}
+  .ptr{color:#fff;background:var(--accent);border-radius:4px;padding:.05rem .4rem;font-size:.72rem;font-weight:600}
+  .head{background:#33415c}
+  .cmt{color:var(--ink)}
+  .mergecmt{color:var(--ok);font-weight:600}
+  .ff-tag{color:var(--ink-soft)}
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.25rem 0}
+  .twocol > div{border:1px solid var(--rule);border-radius:6px;padding:.9rem 1rem}
+  .twocol h3{margin-top:0}
+  .twocol .tag{font-family:ui-monospace,Consolas,monospace;font-size:.7rem;letter-spacing:.1em;
+               text-transform:uppercase;color:var(--accent);display:block;margin-bottom:.4rem}
+  @media (max-width:560px){.twocol{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<p class="eyebrow">Lesson 04 · team collaboration</p>
+<h1>Branching &amp; Merging</h1>
+<p class="subtitle">You already know a branch is a movable pointer. Merging is just how two pointers rejoin — and there are exactly two ways it can happen. Learn to tell them apart and branching stops being scary.</p>
+
+<p>This is the first lesson of the <strong>team half</strong> of the mission. Everything here is built from Lesson 02's model: <a href="0002-what-a-commit-is.html">commits are immutable snapshots, a branch is a ~40-byte pointer, <code>HEAD</code> says which branch you're on</a>. Merging adds no new kind of object except one — a commit with <em>two</em> parents. That's the whole idea.</p>
+
+<h2>Step 1 — make a branch and commit on it</h2>
+
+<p>A branch lets you build something without touching <code>main</code>. Create one, switch to it, commit — <code>main</code> doesn't move.</p>
+
+<pre><code>git switch -c feature        <span class="ff-tag"># create branch "feature" AND move HEAD onto it</span>
+<span class="ff-tag"># ...edit, git add, git commit...</span>
+git commit -m "add feature"</code></pre>
+
+<p><code>git switch -c</code> is create-and-switch in one step. The old spelling is <code>git checkout -b</code> — same effect. <span class="gui">GUI: the branch name in the bottom-left status bar → "Create new branch…"</span></p>
+
+<div class="graph">A ── B ── C   <span class="ptr">main</span>
+           \\
+            D   <span class="ptr">feature</span> <span class="ptr head">HEAD</span></div>
+
+<p><code>main</code> still points at <code>C</code>. Your new commit <code>D</code> hangs off it, and <code>feature</code> + <code>HEAD</code> moved forward to <code>D</code>. Two lines of history now exist. Merging is the act of bringing one back into the other.</p>
+
+<h2>Step 2 — merge it back</h2>
+
+<p>The rule to memorize: <strong>you merge <em>into</em> the branch you're standing on.</strong> To fold <code>feature</code> into <code>main</code>, switch to <code>main</code> first, then merge.</p>
+
+<pre><code>git switch main
+git merge feature</code></pre>
+
+<p>What happens next depends entirely on <strong>one question: did <code>main</code> move since you branched?</strong> That splits into the two — and only two — kinds of merge.</p>
+
+<h2>The two kinds of merge</h2>
+
+<div class="twocol">
+  <div>
+    <span class="tag">Fast-forward</span>
+    <h3>main didn't move</h3>
+    <p><code>main</code> is still at <code>C</code> — directly behind <code>feature</code>. There's nothing to reconcile. Git just slides the <code>main</code> pointer forward onto <code>D</code>. No new commit.</p>
+    <div class="graph">A ─ B ─ C ─ D   <span class="ptr">feature</span>
+                <span class="ptr">main</span> <span class="ptr head">HEAD</span></div>
+    <p class="ff-tag">History stays a straight line.</p>
+  </div>
+  <div>
+    <span class="tag">Three-way merge</span>
+    <h3>main moved too</h3>
+    <p>Someone committed <code>E</code> on <code>main</code> while you worked. The lines <em>diverged</em>. Git can't just slide — it builds a new <strong>merge commit</strong> <code>M</code> with <em>two</em> parents (<code>E</code> and <code>D</code>), tying the lines together.</p>
+    <div class="graph">A ─ B ─ C ─ E ─── <span class="mergecmt">M</span>   <span class="ptr">main</span> <span class="ptr head">HEAD</span>
+            \\      /
+             D ────╯   <span class="ptr">feature</span></div>
+    <p class="ff-tag">History forks and rejoins.</p>
+  </div>
+</div>
+
+<div class="note">
+  <span class="label">Why "three-way"</span>
+  Git reconciles by looking at <em>three</em> commits: your tip (<code>D</code>), their tip (<code>E</code>), and the <strong>merge base</strong> — the last commit both shared (<code>C</code>). Comparing each side against that common ancestor is how Git figures out what actually changed on each line. When both sides changed the same lines, that's a <a href="#next">conflict</a> — the whole of next lesson.</p>
+</div>
+
+<h2>Step 3 — clean up</h2>
+
+<p>After a merge, the feature branch pointer has done its job. Deleting it throws away <em>nothing</em> — the commits are now reachable from <code>main</code>. You're removing a label, not history.</p>
+
+<pre><code>git branch -d feature        <span class="ff-tag"># -d refuses if the branch isn't merged (a safety net)</span></code></pre>
+
+<p><span class="gui">GUI: Source Control panel → "…" menu → Branch → Delete Branch.</span> Use lowercase <code>-d</code>; the capital <code>-D</code> forces deletion even if unmerged — save that for branches you're deliberately abandoning.</p>
+
+<h2>Forcing a merge commit (why teams do it)</h2>
+
+<p>A fast-forward is tidy but erases the fact that a feature ever existed as a separate line. Many teams prefer an explicit merge commit so the branch's shape survives in history:</p>
+
+<pre><code>git merge --no-ff feature    <span class="ff-tag"># always make a merge commit, even when a fast-forward was possible</span></code></pre>
+
+<p>This is exactly what a GitHub "Merge pull request" button does by default — which is why <code>git log --graph</code> on a shared repo is full of these rejoin points. You'll read those graphs fluently by the end of this half.</p>
+
+<div class="win">
+  <span class="label">Your win</span>
+  You can branch, merge, and — crucially — <em>predict which of the two merges you'll get</em> before you run it. Fast-forward when <code>main</code> hasn't moved; three-way merge commit when it has. That single distinction explains 90% of what confuses people about branching.
+</div>
+
+<div class="quiz" data-quiz='[
+  {"q":"You branch off C, commit D. main is still at C. You run git merge feature from main. What happens?","a":["main slides forward to D, no new commit is made","a merge commit with two parents is created","git refuses because main has not moved","D is copied onto main as a brand-new commit"],"correct":0,"why":"main is a direct ancestor of feature, so Git fast-forwards: it just moves the main pointer to D. Nothing to reconcile, no merge commit."},
+  {"q":"main advanced to E while your feature sat at D. Merging feature into main produces what?","a":["a fast-forward of main onto commit D","a merge commit M whose parents are E and D","an error telling you to rebase first","a silent overwrite of E with D content"],"correct":1,"why":"The lines diverged from the shared base C, so Git makes a three-way merge commit M with two parents, E and D, joining both histories."},
+  {"q":"Before merging feature into main, which command puts you in the right place?","a":["run git switch main, then git merge feature","run git switch feature, then git merge main","run git merge main from any branch you like","run git branch main before merging feature"],"correct":0,"why":"You merge INTO the branch you are standing on. To fold feature into main, HEAD must be on main first, then git merge feature."}
+]'></div>
+
+<h2 id="next">Go deeper</h2>
+<p><strong>Primary source — read this one:</strong> <a href="https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging">Pro Git §3.2, "Basic Branching and Merging"</a>. It walks these exact two scenarios with Git's own pointer diagrams, then rolls straight into the conflict case.</p>
+<p><strong>Then play:</strong> <a href="https://learngitbranching.js.org/">Learn Git Branching</a> — the "Ramping Up" levels animate fast-forward vs. three-way merges as you type. The fastest way to make it stick.</p>
+
+<div class="footer">
+  <p><strong>Reference:</strong> <a href="../reference/git-glossary.html">Git Glossary</a> — new terms: fast-forward, three-way merge, merge commit, merge base, diverge.</p>
+  <p><strong>Previous:</strong> <a href="0003-the-undo-playbook.html">Lesson 03 — The Undo Playbook</a> · <strong>Index:</strong> <a href="../index.html">all lessons</a></p>
+  <p><strong>Next up:</strong> merge conflicts — what the <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> markers mean, how to resolve one by hand start to finish, and why they are never as scary as they look.</p>
+  <p class="no-print"><strong>Anything fuzzy?</strong> Ask your teacher — the agent in this workspace. "How does Git decide the merge base?" is exactly the right kind of question.</p>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
