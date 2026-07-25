@@ -111,6 +111,33 @@
   <dd>Rewind a paused, conflicted merge back to the exact state before <code>git merge</code> ran. Discards only the half-finished merge — never touches committed work. The escape hatch.</dd>
 </dl>
 
+<h2>Remotes &amp; collaboration</h2>
+<dl>
+  <dt>remote</dt>
+  <dd>A copy of the repo hosted elsewhere (GitHub, GitLab, another machine). A full repo with its own commits and branch pointers — not a diff or a subset.</dd>
+
+  <dt>origin</dt>
+  <dd>Git's default name for the remote you cloned from. Just a name (you can add others); by convention <code>origin</code> is <em>the</em> server repo.</dd>
+
+  <dt>remote-tracking branch</dt>
+  <dd>A local pointer like <code>origin/main</code> that records where the server's branch was at your <em>last sync</em>. A cached bookmark, not live — it moves only on <code>fetch</code>, <code>pull</code>, or <code>push</code>. This is what <code>git status</code> compares against to say "ahead/behind".</dd>
+
+  <dt>ahead / behind</dt>
+  <dd>How many commits your local branch has that <code>origin/main</code> doesn't (ahead) and vice versa (behind). Ahead → you have unpushed work; behind → the server has commits you haven't pulled.</dd>
+
+  <dt>upstream (git push -u)</dt>
+  <dd>The remote branch your local branch is linked to. <code>git push -u origin &lt;branch&gt;</code> sets it once; afterwards plain <code>git push</code> / <code>git pull</code> know the target. <span class="aka">In VS Code: "Publish Branch".</span></dd>
+
+  <dt>git fetch</dt>
+  <dd>Download the remote's new commits and update <code>origin/*</code> pointers — <strong>without</strong> touching your working branch. The safe "show me what's new".</dd>
+
+  <dt>git pull</dt>
+  <dd><code>fetch</code> <em>then</em> <code>merge origin/&lt;branch&gt;</code> into your current branch, in one step. Can produce merge commits and conflicts, because the merge half runs automatically.</dd>
+
+  <dt>pull request (PR)</dt>
+  <dd>A GitHub/GitLab feature (not a Git command): "review my branch and merge it into <code>main</code>." Pushing the branch is the Git half; the review and merge-button live on the website. Merging usually creates a <code>--no-ff</code> merge commit.</dd>
+</dl>
+
 <h2>Undoing things</h2>
 <dl>
   <dt>git restore &lt;file&gt;</dt>
@@ -143,7 +170,7 @@
 
 <div class="footer">
   <p>Terms are added here as lessons introduce them. Source of truth for definitions: <a href="https://git-scm.com/docs/gitglossary">the official gitglossary</a> and <a href="https://git-scm.com/book/en/v2">Pro Git</a>.</p>
-  <p><strong>Introduced in:</strong> <a href="../lessons/0001-the-three-trees.html">Lesson 01 — The Three Trees</a> · <a href="../lessons/0002-what-a-commit-is.html">Lesson 02 — What a Commit Really Is</a> · <a href="../lessons/0003-the-undo-playbook.html">Lesson 03 — The Undo Playbook</a> · <a href="../lessons/0004-branching-and-merging.html">Lesson 04 — Branching &amp; Merging</a> · <a href="../lessons/0005-merge-conflicts.html">Lesson 05 — Merge Conflicts</a>.</p>
+  <p><strong>Introduced in:</strong> <a href="../lessons/0001-the-three-trees.html">Lesson 01 — The Three Trees</a> · <a href="../lessons/0002-what-a-commit-is.html">Lesson 02 — What a Commit Really Is</a> · <a href="../lessons/0003-the-undo-playbook.html">Lesson 03 — The Undo Playbook</a> · <a href="../lessons/0004-branching-and-merging.html">Lesson 04 — Branching &amp; Merging</a> · <a href="../lessons/0005-merge-conflicts.html">Lesson 05 — Merge Conflicts</a> · <a href="../lessons/0006-remotes-and-pull-requests.html">Lesson 06 — Remotes &amp; Pull Requests</a>.</p>
 </div>
 
 </body>

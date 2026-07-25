@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 6 — Remotes &amp; Pull Requests</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .graph{font-family:ui-monospace,Consolas,monospace;font-size:.82rem;line-height:1.7;
+         background:var(--code-bg);border-left:3px solid var(--accent);
+         padding:.9rem 1.1rem;border-radius:0 4px 4px 0;margin:1.25rem 0;white-space:pre;overflow-x:auto}
+  .ptr{color:#fff;background:var(--accent);border-radius:4px;padding:.05rem .4rem;font-size:.72rem;font-weight:600}
+  .head{background:#33415c}
+  .remote{background:#2f6f4f}
+  .cmt{color:var(--ink-soft)}
+  .flow{margin:1.5rem 0;border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+  .flow-step{display:flex;align-items:flex-start;gap:.8rem;padding:.75rem 1rem;border-bottom:1px solid var(--rule);font-size:.92rem}
+  .flow-step:last-child{border-bottom:none}
+  .flow-step .n{font-family:ui-monospace,Consolas,monospace;font-weight:600;color:#fff;background:var(--accent);
+           border-radius:5px;padding:.15rem .55rem;font-size:.78rem;flex:none;margin-top:.1rem}
+</style>
+</head>
+<body>
+
+<p class="eyebrow">Lesson 06 · team collaboration · capstone</p>
+<h1>Remotes &amp; Pull Requests</h1>
+<p class="subtitle">The last piece: how your local pointers talk to a server. Master one idea — a remote is just more pointers, living somewhere else — and pushing, PRs, and reading a shared graph all fall out of it.</p>
+
+<p>You use <code>push</code> and <code>pull</code> by habit but have no model underneath. This lesson gives you that model, and with it the two final mission goals: <strong>open a clean pull request</strong>, and <strong>read <code>git log --graph</code> on a shared repo</strong>. Everything rests on one extension of <a href="0002-what-a-commit-is.html">the pointer idea from Lesson 02</a>.</p>
+
+<h2>The one idea: a remote is a copy with its own pointers</h2>
+
+<p><code>origin</code> is Git's default name for the server repo you cloned from (GitHub, GitLab, a colleague's machine). It's a <strong>full copy</strong> of the repo — same commits, its own branch pointers. Your local <code>main</code> and the server's <code>main</code> are <em>two independent pointers</em> that happen to share history.</p>
+
+<p>To track the gap, Git keeps a third pointer locally: <code>origin/main</code> — a <strong>remote-tracking branch</strong>. Read it as: <em>"where the server's <code>main</code> was the last time I synced."</em> It's a cached bookmark, not live. It moves only when you <code>fetch</code>, <code>pull</code>, or <code>push</code>.</p>
+
+<div class="graph">A ─ B ─ C   <span class="ptr remote">origin/main</span>   <span class="cmt">← server was here at last sync</span>
+        \\
+         D ─ E   <span class="ptr">main</span> <span class="ptr head">HEAD</span>   <span class="cmt">← your 2 local commits, not yet pushed</span></div>
+
+<p>This graph says: you're <strong>2 ahead</strong> of the server. <code>git status</code> literally prints <em>"Your branch is ahead of 'origin/main' by 2 commits."</em> Now it means something — it's comparing your <code>main</code> pointer to the <code>origin/main</code> cache.</p>
+
+<div class="note">
+  <span class="label">fetch vs. pull — the distinction that removes surprises</span>
+  <code>git fetch</code> downloads the server's new commits and moves <code>origin/main</code> — but does <strong>not</strong> touch <em>your</em> <code>main</code>. It's the safe "show me what's new" with zero risk. <code>git pull</code> = <code>fetch</code> <em>then</em> <code>merge origin/main into main</code> — it downloads <em>and</em> merges in one step, which is where surprise merge commits and conflicts come from. When unsure on a shared repo, <code>fetch</code> first, look, then merge deliberately.
+</div>
+
+<h2>The pull-request workflow, end to end</h2>
+
+<p>A pull request (PR) is a <strong>GitHub/GitLab feature, not a Git command</strong>: "please review my branch and merge it into <code>main</code>." The Git half is just pushing a branch; the review half lives on the website.</p>
+
+<div class="flow">
+  <div class="flow-step"><span class="n">1</span><div><strong>Branch and build.</strong> <code>git switch -c feature</code>, commit your work — exactly <a href="0004-branching-and-merging.html">Lesson 04</a>. Never work directly on <code>main</code> on a team.</div></div>
+  <div class="flow-step"><span class="n">2</span><div><strong>Push the branch, set upstream:</strong> <code>git push -u origin feature</code>. The <code>-u</code> (upstream) links your local <code>feature</code> to <code>origin/feature</code> once — after that, plain <code>git push</code> and <code>git pull</code> know where to go. <span class="gui">GUI: "Publish Branch" in the Source Control panel.</span></div></div>
+  <div class="flow-step"><span class="n">3</span><div><strong>Open the PR</strong> on the website: base <code>main</code> ← compare <code>feature</code>. Title + description explaining <em>why</em>. This starts the review.</div></div>
+  <div class="flow-step"><span class="n">4</span><div><strong>Respond to review.</strong> Reviewer requests a change? Commit it on the <em>same</em> branch and <code>git push</code>. The PR updates automatically — no new PR needed. Repeat until approved.</div></div>
+  <div class="flow-step"><span class="n">5</span><div><strong>Merge the PR</strong> with the website's button (a <code>--no-ff</code> merge commit by default — see <a href="0004-branching-and-merging.html">Lesson 04</a>), then delete the branch. Locally: <code>git switch main</code>, <code>git pull</code> to catch up.</div></div>
+</div>
+
+<div class="note">
+  <span class="label">"Clean reviewable history" — what the mission asked for</span>
+  A reviewer reads your commits, not just the final diff. Make it a story: each commit one logical change, a clear message, no <code>"wip"</code> / <code>"fix typo"</code> / <code>"actually fix"</code> noise. Two tools you already own from the solo half — <a href="0003-the-undo-playbook.html"><code>commit --amend</code></a> to fix the last commit before pushing, and <code>git reset --soft</code> to squash a few messy commits into one clean one <em>before</em> the PR. Both are history rewrites, so only on your <em>unpushed</em> branch — the <a href="0003-the-undo-playbook.html">reset-before-share rule</a> still holds.
+</div>
+
+<h2>Reading the graph on a shared repo</h2>
+
+<p>The final mission goal. One command shows every pointer — local and remote — at once:</p>
+
+<pre><code>git log --graph --oneline --all --decorate</code></pre>
+
+<div class="graph">*   f3a1c2 <span class="ptr">main</span> Merge pull request #42 from feature
+|\\
+| * 9d8e7f <span class="ptr remote">origin/feature</span> address review: rename var
+| * 2b4c6a add feature
+|/
+* 7a8b9c <span class="ptr remote">origin/main</span> <span class="ptr head">HEAD</span> previous release</div>
+
+<p>Read it bottom-up: history forked at <code>7a8b9c</code>, two commits happened on <code>feature</code> (the second one addressing review), then <code>f3a1c2</code> is the merge commit that rejoined them into <code>main</code>. The <code>|\</code> and <code>|/</code> are the fork and the rejoin — the exact three-way-merge shape from <a href="0004-branching-and-merging.html">Lesson 04</a>, now with remote pointers labelled. You can reconstruct what the team did without asking anyone. <span class="gui">GUI: the Git Graph extension, or Source Control → "…" → View History, draws this same graph.</span></p>
+
+<div class="win">
+  <span class="label">Your win — and the mission</span>
+  You can push a branch, open a PR with a history a reviewer will thank you for, fold in review feedback, and read a shared repo's graph cold. That's the <strong>last two mission goals</strong>. Both halves — never lose solo work, and collaborate without fear — are now covered end to end.
+</div>
+
+<div class="quiz" data-quiz='[
+  {"q":"git status says you are ahead of origin/main by 2 commits. What does origin/main actually point to?","a":["the live current tip of the server main branch","where the server main was at your last sync","a backup branch Git created automatically","the two local commits you have not pushed"],"correct":1,"why":"origin/main is a remote-tracking pointer: a cached bookmark of where the server main was the last time you synced. It moves only on fetch, pull, or push."},
+  {"q":"You want to see what teammates pushed WITHOUT changing your own main branch. Which command?","a":["git pull to bring your branch up to date","git fetch to update origin/main only","git merge origin/main into your work","git push to synchronise both sides"],"correct":1,"why":"fetch downloads new commits and moves origin/main but leaves your main untouched. pull would fetch AND merge into your branch, which changes your main."},
+  {"q":"A reviewer asks for one change on your open PR. Cleanest way to update it?","a":["open a brand-new pull request with the fix","commit the change on the same branch and push","force-push a rewritten history over the branch","merge main into your branch to refresh it"],"correct":1,"why":"Commit on the same branch and push; the existing PR updates automatically. No new PR, no history rewrite needed once the branch is already shared."},
+  {"q":"In git log --graph, what do the |\\ and |/ shapes mark?","a":["a file rename tracked across two commits","where history forked and later rejoined","two branches that can never be merged","a conflict that was left unresolved"],"correct":1,"why":"|\\ is a fork (a branch diverging) and |/ is the rejoin at a merge commit — the visual signature of the three-way merge from Lesson 04."}
+]'></div>
+
+<h2>Go deeper</h2>
+<p><strong>Primary source — read this one:</strong> <a href="https://git-scm.com/book/en/v2/Git-Branching-Remote-Branches">Pro Git §3.5, "Remote Branches"</a>. The definitive treatment of <code>origin/main</code>, tracking branches, and fetch vs. pull, with Git's own pointer diagrams.</p>
+<p><strong>Then do it for real:</strong> <a href="https://skills.github.com/">GitHub Skills</a> — guided courses that run inside a real GitHub repo, walking the full PR + review loop. The one resource in the workspace built specifically for this workflow.</p>
+
+<div class="footer">
+  <p><strong>Reference:</strong> <a href="../reference/git-glossary.html">Git Glossary</a> — new terms: remote, origin, remote-tracking branch, upstream (<code>-u</code>), fetch vs. pull, pull request, ahead/behind.</p>
+  <p><strong>Previous:</strong> <a href="0005-merge-conflicts.html">Lesson 05 — Merge Conflicts</a> · <strong>Index:</strong> <a href="../index.html">all lessons</a></p>
+  <p><strong>Mission complete.</strong> Both halves covered end to end. From here it's reps, not new lessons — <a href="https://learngitbranching.js.org/">Learn Git Branching</a>'s remote levels, and real PRs. Post a <code>git log --graph --oneline --all</code> to <a href="https://reddit.com/r/git">r/git</a> if a real repo ever confuses you.</p>
+  <p class="no-print"><strong>Anything fuzzy?</strong> Ask your teacher — the agent in this workspace.</p>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

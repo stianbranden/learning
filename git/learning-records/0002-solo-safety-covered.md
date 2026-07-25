@@ -6,6 +6,8 @@ Lessons 01–03 delivered: three trees, commit graph (snapshot + parent, branch/
 
 **2026-07-25 update — established.** Grilled on three interleaved scenarios, all reasoned correctly from memory: (1) `reset --hard` commits are recoverable via reflog, (2) fast-forward merge produces 1 commit and no merge commit, (3) `revert` not `reset` after a commit is pushed/shared. Solo-safety is now *established*, not just taught.
 
-**One live gap (feeds future review):** on reflog recovery the user reaches for `git switch <sha>` (→ detached HEAD) instead of `git reset --hard <sha>` to move the branch pointer. The `switch = move HEAD` vs `reset = move the branch pointer` distinction is the thing to re-test in a later spaced round. See [[0003-conflicts-and-team-half]] once written.
+**One live gap (feeds future review):** on reflog recovery the user reaches for `git switch <sha>` (→ detached HEAD) instead of `git reset --hard <sha>` to move the branch pointer. The `switch = move HEAD` vs `reset = move the branch pointer` distinction is the thing to re-test in a later spaced round. See [[0003-mission-covered-end-to-end]].
 
-**Status:** established, with the switch-vs-reset gap flagged for spaced re-test.
+**2026-07-25 (later) — gap closed.** Re-tested in a spaced round: user correctly gave `git reset --hard <sha>` (not `switch`) to restore a branch after a bad `reset --hard` + reflog lookup. The switch-vs-reset distinction is now retained. Same round: 5/5 on conflict mechanism, marker reading, add-to-resolve, and `merge --abort`.
+
+**Status:** established. No open gaps in the solo-safety / branching-merging-conflict material.
