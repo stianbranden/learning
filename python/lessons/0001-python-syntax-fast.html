@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 1 — Python Syntax, Fast</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
+  .compare pre{margin:0}
+  .compare h4{margin:0 0 .4rem;font-size:.82rem;color:var(--ink-soft);font-weight:600}
+  @media (max-width:560px){.compare{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<p class="eyebrow">Lesson 01 · foundations</p>
+<h1>Python Syntax, Fast</h1>
+<p class="subtitle">Same ideas you already have — <code>for</code>, <code>if</code>, functions — new punctuation.</p>
+
+<p>You already know what a variable, a loop, a conditional, and a function <em>are</em>. This lesson is not about those concepts — it's a fast map from concepts you have to Python's specific syntax for them, so you can write and run a real script by the end.</p>
+
+<h2>Running a script</h2>
+
+<p>Two ways you'll use constantly:</p>
+
+<pre><code># save as hello.py, then:
+python3 hello.py
+
+# or start an interactive shell (REPL) — evaluates line by line:
+python3</code></pre>
+
+<div class="note">
+  <span class="label">Later</span>
+  Once lessons reach data work, you'll mostly run code in a Jupyter notebook instead of a plain script — cells you re-run individually. Not needed yet.
+</div>
+
+<h2>The one big rule: indentation is the block</h2>
+
+<p>Languages with <code>{ }</code> or <code>begin/end</code> use punctuation to mark a block. Python uses a colon and indentation — the whitespace <em>is</em> the syntax, not a style choice.</p>
+
+<div class="compare">
+  <div>
+    <h4>Brace-style language</h4>
+    <pre><code>if (x > 0) {
+    print(x);
+}</code></pre>
+  </div>
+  <div>
+    <h4>Python</h4>
+    <pre><code>if x > 0:
+    print(x)</code></pre>
+  </div>
+</div>
+
+<div class="warn">
+  <span class="label">The classic mistake</span>
+  Mixing tabs and spaces, or indenting one line differently than its siblings, is a syntax error in Python — not a lint warning. Pick spaces (4 is the convention) and let your editor handle it consistently.
+</div>
+
+<h2>Variables need no type</h2>
+
+<p>No <code>int x = 5;</code>. A name is just bound to a value, and can be rebound to a different type later (usually a code smell, but legal):</p>
+
+<pre><code>age = 27          # int
+name = "Ada"      # str
+pi = 3.14         # float
+is_ready = True   # bool — capitalized, no quotes
+
+print(f"{name} is {age}")   # f-string: {expr} interpolated inline</code></pre>
+
+<div class="note">
+  <span class="label">Naming convention</span>
+  Python variables and functions are <code>snake_case</code>, not <code>camelCase</code>. This isn't optional style — every library you'll read (including pandas) follows it, so code that doesn't looks foreign.
+</div>
+
+<h2>Functions and control flow, together</h2>
+
+<p>One block, all the pieces from above in context:</p>
+
+<pre><code>def classify(n):
+    if n < 0:
+        return "negative"
+    elif n == 0:
+        return "zero"
+    else:
+        return "positive"
+
+numbers = [-2, 0, 5, 17]
+
+for n in numbers:
+    print(n, "→", classify(n))</code></pre>
+
+<p>Notice: no return type declared, no semicolons, the <code>for</code> loop iterates directly over a collection (no index bookkeeping unless you ask for it), and <code>def</code> needs no parameter types.</p>
+
+<div class="quiz" data-title="Retrieval practice — answer before scrolling back"
+  data-quiz='[
+    {"q":"What marks the start of a Python code block?","a":["A colon plus indent","An opening curly brace"],"correct":0,"why":"Python has no braces. A colon ends the header line (if/def/for/…) and the next line must be indented — that indentation is the block."},
+    {"q":"age = 5 then later age = \"five\". Is this a Python error?","a":["No, rebinding is legal","Yes, type mismatch error"],"correct":0,"why":"Python is dynamically typed — a name is just a label for a value. Rebinding to a different type is legal (though usually confusing to read)."},
+    {"q":"Which naming style is Python convention for variables?","a":["snake_case, all lowercase","camelCase, first lower"],"correct":0,"why":"Python’s style guide (PEP 8) uses snake_case for variables and functions — camelCase is reserved for class names."},
+    {"q":"for n in numbers: what does n become each pass?","a":["Each element itself","The index of element"],"correct":0,"why":"Python’s for loop iterates directly over the collection’s values. Reach for enumerate(numbers) on the rare occasion you also need the index."}
+  ]'></div>
+
+<h2>Do this now (5 minutes)</h2>
+
+<p>Write and run a real script — don't just read the one above:</p>
+
+<pre><code># save as fizzbuzz.py
+def fizzbuzz(n):
+    if n % 15 == 0:
+        return "FizzBuzz"
+    elif n % 3 == 0:
+        return "Fizz"
+    elif n % 5 == 0:
+        return "Buzz"
+    else:
+        return str(n)
+
+for i in range(1, 21):
+    print(fizzbuzz(i))</code></pre>
+
+<p>Run it: <code>python3 fizzbuzz.py</code>. If it prints 20 lines ending in <code>19, FizzBuzz</code> — indentation, function, loop, and conditional all landed correctly.</p>
+
+<div class="win">
+  <span class="label">Your win</span>
+  You've mapped variables, functions, conditionals, and loops onto Python's actual syntax, and run a script that uses all four together. Next lesson builds the data structures (lists, dicts) you'll lean on constantly once real datasets show up.
+</div>
+
+<h2>Go deeper</h2>
+
+<p><strong>Primary source — read this one:</strong> <a href="https://docs.python.org/3/tutorial/controlflow.html">The Python Tutorial §4, "More Control Flow Tools"</a>. Covers <code>if</code>, <code>for</code>, <code>range</code>, and <code>def</code> in the authoritative detail this lesson compressed.</p>
+
+<div class="footer">
+  <p><strong>Reference:</strong> <a href="../reference/python-glossary.html">Python Glossary</a> — terms introduced here: REPL, indentation block, dynamic typing, snake_case, f-string.</p>
+  <p><strong>Next up:</strong> lists, dicts, and tuples — the data structures every pandas DataFrame is built from underneath.</p>
+  <p class="no-print"><strong>Stuck on anything?</strong> Ask your teacher — that's the agent in this workspace. Paste the exact error if something didn't run as described.</p>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

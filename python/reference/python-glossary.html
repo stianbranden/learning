@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reference — Python Glossary</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  dl{margin:1.5rem 0}
+  dt{font-family:ui-monospace,Consolas,monospace;font-weight:600;font-size:.95rem;
+     margin-top:1.1rem;color:var(--accent)}
+  dd{margin:.25rem 0 0;max-width:var(--measure)}
+  dd .aka{color:var(--ink-soft);font-style:italic}
+</style>
+</head>
+<body>
+
+<p class="eyebrow">Reference · living document</p>
+<h1>Python Glossary</h1>
+<p class="subtitle">Canonical definitions used across every lesson in this workspace.</p>
+
+<h2>Running code</h2>
+<dl>
+  <dt>REPL</dt>
+  <dd>Read-Eval-Print Loop — the interactive <code>python3</code> shell. Evaluates one line at a time, prints results back. Good for quick checks, not for real scripts.</dd>
+
+  <dt>script</dt>
+  <dd>A <code>.py</code> file run top-to-bottom with <code>python3 file.py</code>.</dd>
+</dl>
+
+<h2>Syntax</h2>
+<dl>
+  <dt>indentation block</dt>
+  <dd>Python's block syntax: a header line ending in <code>:</code> (after <code>if</code>, <code>for</code>, <code>def</code>, etc.), followed by consistently-indented lines. No braces — the whitespace itself delimits the block.</dd>
+
+  <dt>dynamic typing</dt>
+  <dd>A name is bound to a value, not declared with a fixed type. The same name can be rebound to a value of a different type later — legal, though usually a sign of confused code.</dd>
+
+  <dt>snake_case</dt>
+  <dd>Python's naming convention for variables and functions: lowercase words joined by underscores. Defined in <a href="https://peps.python.org/pep-0008/">PEP 8</a>, followed by virtually every library, including pandas.</dd>
+
+  <dt>f-string</dt>
+  <dd>A string literal prefixed <code>f</code>, e.g. <code>f"{name} is {age}"</code> — expressions inside <code>{ }</code> are evaluated and interpolated inline. The standard way to build strings with embedded values.</dd>
+</dl>
+
+</body>
+</html>

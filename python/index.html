@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Learning Python — Course Index</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .card{display:block;border:1px solid var(--rule);border-radius:6px;padding:1rem 1.2rem;
+        margin:.75rem 0;background:#fff;text-decoration:none;color:inherit;transition:border-color .12s,background .12s}
+  .card:hover{border-color:var(--accent);background:var(--accent-soft)}
+  .card .num{font-family:ui-monospace,Consolas,monospace;font-size:.72rem;letter-spacing:.12em;
+             color:var(--accent);display:block;margin-bottom:.2rem}
+  .card h3{margin:0;font-size:1.05rem}
+  .card p{margin:.3rem 0 0;font-size:.9rem;color:var(--ink-soft);max-width:none}
+  .card .terms{font-family:ui-monospace,Consolas,monospace;font-size:.72rem;color:var(--ink-soft);
+               margin-top:.5rem;display:block}
+  .planned{border-style:dashed;background:#fbfaf6;opacity:.7;cursor:default}
+  .planned:hover{border-color:var(--rule);background:#fbfaf6}
+</style>
+</head>
+<body>
+
+<p class="eyebrow">Course index</p>
+<h1>Learning Python</h1>
+<p class="subtitle">Builder track: write Python to load, clean, and analyze real datasets — not just talk about AI/finance concepts.</p>
+
+<h2>Lessons</h2>
+
+<a class="card" href="lessons/0001-python-syntax-fast.html">
+  <span class="num">Lesson 01 · foundations</span>
+  <h3>Python Syntax, Fast</h3>
+  <p>Concepts you already have — variables, loops, conditionals, functions — mapped onto Python's specific syntax and conventions.</p>
+  <span class="terms">indentation block · dynamic typing · snake_case · f-string · REPL</span>
+</a>
+
+<span class="card planned">
+  <span class="num">Lesson 02 · planned</span>
+  <h3>Lists, Dicts &amp; Tuples</h3>
+  <p>The data structures every pandas DataFrame is built from underneath.</p>
+</span>
+
+<h2>Reference</h2>
+
+<a class="card" href="reference/python-glossary.html">
+  <span class="num">Reference · living</span>
+  <h3>Python Glossary</h3>
+  <p>Canonical definitions used across all lessons.</p>
+</a>
+
+<h2>Workspace</h2>
+
+<table>
+  <tr><th>File</th><th>What it holds</th></tr>
+  <tr><td><a href="MISSION.md">MISSION.md</a></td><td>Why you're learning Python. Grounds every teaching decision.</td></tr>
+  <tr><td><a href="RESOURCES.md">RESOURCES.md</a></td><td>Trusted sources — official docs, pandas, communities.</td></tr>
+  <tr><td><a href="learning-records/">learning-records/</a></td><td>What's been established — drives what gets taught next.</td></tr>
+</table>
+
+<div class="footer">
+  <p><strong>Primary source throughout:</strong> <a href="https://docs.python.org/3/tutorial/">The Python Tutorial</a> — official, free, authoritative.</p>
+  <p class="no-print"><strong>Ready for the next lesson, or stuck on this one?</strong> Ask your teacher — the agent in this workspace.</p>
+</div>
+
+</body>
+</html>
