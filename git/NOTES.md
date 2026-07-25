@@ -16,4 +16,5 @@
 - 2026-07-22 — Workspace created. Mission set. Lesson 0001 (three trees) delivered.
 - 2026-07-23 — Lesson 0002 (what a commit is: graph, branch/HEAD pointers) delivered. Root + course index.html added.
 - 2026-07-24 — Lesson 0003 (undo playbook) delivered. Solo-safety arc complete (see LR-0002). Next: team half — branching/merging.
-- 2026-07-25 — Lesson 0004 (branching & merging: fast-forward vs three-way, merge commit, merge base) delivered. Team half begun. Next: Lesson 0005 — merge conflicts, resolved by hand.
+- 2026-07-25 — Lesson 0004 (branching & merging: fast-forward vs three-way, merge commit, merge base) delivered. Team half begun.
+- 2026-07-25 — Grilled 3 interleaved scenarios; solo-safety established (LR-0002 updated). Live gap: user reaches for `switch <sha>` instead of `reset --hard <sha>` for reflog recovery — re-test later. Then Lesson 0005 (merge conflicts: markers, ours/theirs, add-to-resolve, --abort) delivered. Next: Lesson 0006 — PR workflow + reading git log --graph on a shared repo (needs remotes: push -u/origin, not yet taught).

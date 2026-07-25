@@ -94,6 +94,21 @@
 
   <dt>git branch -d &lt;name&gt;</dt>
   <dd>Delete a branch pointer. Lowercase <code>-d</code> refuses unless the branch is already merged (a safety net); capital <code>-D</code> forces it. Deletes only the label — merged commits survive on the target branch.</dd>
+
+  <dt>conflict</dt>
+  <dd>What halts a merge when both sides changed the <em>same</em> lines back to the merge base. Git won't guess a winner; it pauses the merge and asks you to resolve. Changes to <em>different</em> lines never conflict — they merge silently.</dd>
+
+  <dt>conflict markers</dt>
+  <dd>The <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> / <code>=======</code> / <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> lines Git writes into a conflicted file, fencing both versions. You edit the file to the desired result and delete all three marker lines before staging.</dd>
+
+  <dt>ours vs. theirs</dt>
+  <dd>The two sides of a conflict. "Ours" (<code>&lt;&lt;&lt; HEAD</code>) is the branch you ran <code>merge</code> from; "theirs" (<code>&gt;&gt;&gt; name</code>) is the branch being merged in. In VS Code: "Current Change" = ours, "Incoming Change" = theirs.</dd>
+
+  <dt>git add (to resolve)</dt>
+  <dd>During a merge, staging a file is the signal that its conflict is settled — nothing else marks it done. Once every unmerged file is staged, <code>git commit</code> writes the merge commit.</dd>
+
+  <dt>git merge --abort</dt>
+  <dd>Rewind a paused, conflicted merge back to the exact state before <code>git merge</code> ran. Discards only the half-finished merge — never touches committed work. The escape hatch.</dd>
 </dl>
 
 <h2>Undoing things</h2>
@@ -128,7 +143,7 @@
 
 <div class="footer">
   <p>Terms are added here as lessons introduce them. Source of truth for definitions: <a href="https://git-scm.com/docs/gitglossary">the official gitglossary</a> and <a href="https://git-scm.com/book/en/v2">Pro Git</a>.</p>
-  <p><strong>Introduced in:</strong> <a href="../lessons/0001-the-three-trees.html">Lesson 01 — The Three Trees</a> · <a href="../lessons/0002-what-a-commit-is.html">Lesson 02 — What a Commit Really Is</a> · <a href="../lessons/0003-the-undo-playbook.html">Lesson 03 — The Undo Playbook</a> · <a href="../lessons/0004-branching-and-merging.html">Lesson 04 — Branching &amp; Merging</a>.</p>
+  <p><strong>Introduced in:</strong> <a href="../lessons/0001-the-three-trees.html">Lesson 01 — The Three Trees</a> · <a href="../lessons/0002-what-a-commit-is.html">Lesson 02 — What a Commit Really Is</a> · <a href="../lessons/0003-the-undo-playbook.html">Lesson 03 — The Undo Playbook</a> · <a href="../lessons/0004-branching-and-merging.html">Lesson 04 — Branching &amp; Merging</a> · <a href="../lessons/0005-merge-conflicts.html">Lesson 05 — Merge Conflicts</a>.</p>
 </div>
 
 </body>

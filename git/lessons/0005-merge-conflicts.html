@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 5 — Merge Conflicts, Unscared</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  /* Lesson-specific: annotated conflict-marker block + a linear step ladder. */
+  .conflict{font-family:ui-monospace,Consolas,monospace;font-size:.84rem;line-height:1.6;
+            background:var(--code-bg);border-left:3px solid var(--bad);
+            padding:.9rem 1.1rem;border-radius:0 4px 4px 0;margin:1.25rem 0;overflow-x:auto;white-space:pre}
+  .m-ours{color:#33415c;font-weight:600}
+  .m-theirs{color:var(--ok);font-weight:600}
+  .m-div{color:var(--bad);font-weight:600}
+  .steps{margin:1.5rem 0;border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+  .step{display:flex;align-items:flex-start;gap:.8rem;padding:.75rem 1rem;border-bottom:1px solid var(--rule);font-size:.92rem}
+  .step:last-child{border-bottom:none}
+  .step .n{font-family:ui-monospace,Consolas,monospace;font-weight:600;color:#fff;background:var(--accent);
+           border-radius:5px;padding:.15rem .55rem;font-size:.78rem;flex:none;margin-top:.1rem}
+  .step code{white-space:nowrap}
+  .side-key{display:flex;gap:1.5rem;flex-wrap:wrap;font-size:.9rem;margin:1rem 0}
+  .side-key b{font-family:ui-monospace,Consolas,monospace;font-size:.82rem}
+</style>
+</head>
+<body>
+
+<p class="eyebrow">Lesson 05 · team collaboration</p>
+<h1>Merge Conflicts, Unscared</h1>
+<p class="subtitle">A conflict isn't Git breaking. It's Git refusing to guess. You already know what triggers one — now learn to read the markers and finish a merge by hand, start to end.</p>
+
+<p>From <a href="0004-branching-and-merging.html">Lesson 04</a>: a <strong>three-way merge</strong> reconciles two diverged tips against their <a href="../reference/git-glossary.html">merge base</a>. When each side changed <em>different</em> lines, Git merges them silently. A conflict happens for exactly one reason: <strong>both sides changed the <em>same</em> lines</strong>, and Git won't pick a winner. It stops and hands you the decision. That's all a conflict is.</p>
+
+<h2>What you see when it happens</h2>
+
+<pre><code>$ git merge feature
+Auto-merging config.txt
+CONFLICT (content): Merge conflict in config.txt
+Automatic merge failed; fix conflicts and then commit the result.</code></pre>
+
+<p>The merge is now <strong>paused</strong>, mid-flight. <code>git status</code> confirms it and lists the conflicted files under "Unmerged paths". Open the file and Git has written <strong>both versions</strong> into it, fenced by markers:</p>
+
+<div class="conflict"><span class="m-div">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span>
+timeout = 30        <span class="m-ours"># ← what's on YOUR branch (the one you're merging into)</span>
+<span class="m-div">=======</span>
+timeout = 60        <span class="m-theirs"># ← what's coming IN from the branch you named</span>
+<span class="m-div">&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature</span></div>
+
+<div class="side-key">
+  <span><b>&lt;&lt;&lt; HEAD</b> → "ours" — the branch you ran <code>merge</code> from</span>
+  <span><b>&gt;&gt;&gt; feature</b> → "theirs" — the branch being merged in</span>
+</div>
+
+<p>The <code>=======</code> is just the divider between the two sides — not part of your file. Everything between the markers is a menu, and you're the chooser.</p>
+
+<h2>Resolve it — the five steps, every time</h2>
+
+<div class="steps">
+  <div class="step"><span class="n">1</span><div><strong>Edit the file</strong> so it reads exactly how you want the final result. Keep one side, keep the other, combine them, or write something new — Git doesn't care. <strong>Delete all three marker lines</strong> (<code>&lt;&lt;&lt;</code>, <code>===</code>, <code>&gt;&gt;&gt;</code>) while you're there.</div></div>
+  <div class="step"><span class="n">2</span><div><strong>Stage the resolved file:</strong> <code>git add config.txt</code>. This is how you tell Git "this one's settled." Staging is the signal — nothing else marks a conflict as done.</div></div>
+  <div class="step"><span class="n">3</span><div><strong>Repeat 1–2</strong> for every file <code>git status</code> lists as unmerged. A merge can conflict in many files at once.</div></div>
+  <div class="step"><span class="n">4</span><div><strong>Finish the merge:</strong> <code>git commit</code>. Git pre-fills the merge message. This writes the <a href="0004-branching-and-merging.html">merge commit</a> — the one with two parents.</div></div>
+  <div class="step"><span class="n">5</span><div><strong>Verify:</strong> <code>git status</code> reads "nothing to commit", and <code>git log --graph --oneline</code> shows the two lines rejoined.</div></div>
+</div>
+
+<div class="note">
+  <span class="label">VS Code makes step 1 easier</span>
+  Open a conflicted file and VS Code shows <span class="gui">Accept Current Change</span> / <span class="gui">Accept Incoming Change</span> / <span class="gui">Accept Both</span> buttons right above each conflict, plus a side-by-side view. "Current" = <code>HEAD</code> / ours; "Incoming" = theirs. It's the same choice as editing by hand — the buttons just delete the markers for you. You still do steps 2 &amp; 4 (stage + commit) in the Source Control panel.
+</div>
+
+<h2>The escape hatch — undo the whole thing</h2>
+
+<p>Conflicts overwhelming, or you merged the wrong branch? You are <em>never</em> trapped mid-merge. One command rewinds to exactly the state before you typed <code>git merge</code>:</p>
+
+<pre><code>git merge --abort        <span style="color:#55534d"># throw the whole merge away, back to a clean pre-merge state</span></code></pre>
+
+<p>Nothing is lost — <code>--abort</code> only discards the half-finished merge, never your committed work. Knowing this exists is what makes conflicts stop being scary: worst case, you press undo and try again.</p>
+
+<div class="warn">
+  <span class="label">The one thing not to do</span>
+  Don't <code>git add</code> a file that still has <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> markers in it. Git will happily commit those literal marker lines into your code — a classic way to break a build. Always re-read the file before staging: markers gone, code correct.
+</div>
+
+<div class="win">
+  <span class="label">Your win</span>
+  You can take a merge from <code>CONFLICT</code> to a clean rejoined graph without googling: read the markers (ours vs theirs), edit to the result you want, <code>add</code> to mark each done, <code>commit</code> to finish — or <code>--abort</code> to bail. This is the exact skill the mission named: "resolve a real conflict solo, start to finish."
+</div>
+
+<div class="quiz" data-quiz='[
+  {"q":"A three-way merge runs but produces no conflict at all. Why not?","a":["The two branches changed different lines, so Git merged both cleanly","Conflicts only ever happen during a fast-forward merge","One branch had no commits since the merge base at all","Git silently kept HEAD and threw the other side away"],"correct":0,"why":"Git only stops when both sides edit the SAME lines. Changes to different lines are combined automatically with no conflict."},
+  {"q":"In the markers, the lines between <<<<<<< HEAD and ======= are:","a":["the version from the branch you are merging in","the content on the branch you are currently on","a backup Git keeps that you must not edit","the merge base, shown for reference only"],"correct":1,"why":"<<<<<<< HEAD is your side — ours — the branch you ran merge from. The incoming branch sits below the ======= divider."},
+  {"q":"You edited the file to the final result you want. What single action tells Git this file is resolved?","a":["saving the file to disk in your editor","running git add on the resolved file","deleting the branch you merged in","running git merge --continue immediately"],"correct":1,"why":"Staging with git add is the signal that a conflicted file is settled. Then git commit writes the merge commit. Saving alone does nothing."},
+  {"q":"Halfway through a messy conflict you decide you never wanted this merge. Cleanest way back?","a":["git reset --hard to erase the last few commits","git merge --abort to restore the pre-merge state","delete the conflicted files and commit the rest","git revert the merge you have not finished yet"],"correct":1,"why":"git merge --abort rewinds to exactly the state before the merge, discarding only the half-done merge. It touches no committed work."}
+]'></div>
+
+<h2>Go deeper</h2>
+<p><strong>Primary source — read this one:</strong> <a href="https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging#_basic_merge_conflicts">Pro Git §3.2, "Basic Merge Conflicts"</a>. Same markers, Git's own walkthrough, plus <code>git mergetool</code> if you ever want a dedicated resolver.</p>
+<p><strong>Then play:</strong> <a href="https://learngitbranching.js.org/">Learn Git Branching</a> — provoke a conflict on purpose and resolve it, so the marker-reading becomes muscle memory before it's a real repo under pressure.</p>
+
+<div class="footer">
+  <p><strong>Reference:</strong> <a href="../reference/git-glossary.html">Git Glossary</a> — new terms: conflict, conflict markers, ours vs. theirs, <code>git merge --abort</code>.</p>
+  <p><strong>Previous:</strong> <a href="0004-branching-and-merging.html">Lesson 04 — Branching &amp; Merging</a> · <strong>Index:</strong> <a href="../index.html">all lessons</a></p>
+  <p><strong>Next up:</strong> the pull-request workflow — pushing a branch, opening a PR with clean reviewable history, and reading <code>git log --graph</code> on a shared repo to see what everyone did.</p>
+  <p class="no-print"><strong>Anything fuzzy?</strong> Ask your teacher — the agent in this workspace. "What if I want to keep BOTH values?" is exactly the right kind of question.</p>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
