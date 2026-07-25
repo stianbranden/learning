@@ -12,4 +12,10 @@ Lessons 04–06 delivered the team half: branching & merging (fast-forward vs th
 
 **Teaching direction now:** shift from new lessons to reps + spaced retrieval. Real PRs, Learn Git Branching's remote levels, GitHub Skills. New lessons only if the mission expands (candidates noted in NOTES: rebase/interactive-rebase, cherry-pick, stash — all currently out of scope or untaught).
 
-**Status:** active.
+**2026-07-25 (later) — L06 retention-verified; mission established.** Grilled 3 remote/PR scenarios. Solid on the highest-risk concept: `origin/main` as a stale local cache (correctly reasoned that a teammate's un-fetched push is invisible, that true state was ahead-3/behind-5 while `git status` still shows only "ahead 3", and that `fetch` updates the cache). fetch-then-merge order correct; PR feedback loop (commit same branch + push, no new PR) correct.
+
+**Two sharpenings delivered (not gaps, refinements):**
+1. Divergence *always* forces a three-way **merge commit**; a **conflict** is a separate maybe, only on same-line collisions. User initially answered "merge conflict" where "merge commit (conflict only if same lines)" is precise.
+2. Real-world extension taught beyond the conservative reset-before-share rule: a **PR branch is yours alone**, so squashing pushed `wip` commits via `git reset --soft origin/main` + `git push --force-with-lease` is normal practice. Rule refined to: *rewrite freely on a branch only you touch; never on a shared branch (main).* `--force-with-lease` introduced as the safe force.
+
+**Status:** established. All five mission goals now taught AND retention-verified. Mission complete. Future work is reps + spaced review, or new scope (rebase/cherry-pick/stash — see NOTES).

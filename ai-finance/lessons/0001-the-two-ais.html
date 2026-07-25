@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 01 — The Two AIs</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .buckets{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
+  @media(max-width:620px){.buckets{grid-template-columns:1fr}}
+  .bucket{border:1px solid var(--rule);border-radius:6px;padding:1rem 1.2rem;background:#fff}
+  .bucket h3{margin:0 0 .5rem;font-size:1.05rem}
+  .bucket .tag{font-family:ui-monospace,Consolas,monospace;font-size:.7rem;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--accent);display:block;margin-bottom:.4rem}
+  .bucket ul{margin:.5rem 0 0;padding-left:1.1rem;font-size:.9rem}
+  .bucket li{margin:.25rem 0}
+</style>
+</head>
+<body>
+
+<p class="eyebrow">AI in Finance · Lesson 01</p>
+<h1>The Two AIs</h1>
+<p class="subtitle">Almost every "AI in finance" headline collapses into one of two very different technologies. Tell them apart and you can read the news critically today — before you know a single application in detail.</p>
+
+<div class="note">
+  <span class="label">The win</span>
+  By the end of this page you'll be able to take any AI-in-finance claim, sort it into <strong>predictive ML</strong> or <strong>generative AI</strong>, and name the risk that comes built in with that kind. That one sort is the backbone of the whole course.
+</div>
+
+<h2>One word, two machines</h2>
+
+<p>"AI" in a finance headline is doing one of two completely different jobs, and they fail in completely different ways. The confusion — and most of the hype — comes from a single word covering both.</p>
+
+<div class="buckets">
+  <div class="bucket">
+    <span class="tag">Predictive ML · old · works</span>
+    <h3>It scores or forecasts</h3>
+    <p style="font-size:.9rem;margin:.2rem 0">Learns patterns from historical <strong>numbers in tables</strong> to answer a narrow question about something new.</p>
+    <ul>
+      <li>Is this transaction fraud?</li>
+      <li>Will this borrower default?</li>
+      <li>Where is this price heading?</li>
+    </ul>
+    <p style="font-size:.85rem;color:var(--ink-soft);margin:.6rem 0 0">Decades old. Behind most AI already running in banks. Output is a <em>prediction with an error rate</em>, not a fact.</p>
+  </div>
+
+  <div class="bucket">
+    <span class="tag">Generative AI · new · shaky</span>
+    <h3>It produces language</h3>
+    <p style="font-size:.9rem;margin:.2rem 0">Predicts plausible next words to <strong>generate text or code</strong>. The post-2022 wave — ChatGPT and kin.</p>
+    <ul>
+      <li>Summarise this 200-page filing</li>
+      <li>Draft this client report</li>
+      <li>Answer this customer in chat</li>
+    </ul>
+    <p style="font-size:.85rem;color:var(--ink-soft);margin:.6rem 0 0">New and powerful. Output is <em>fluent but sometimes confidently false</em> — it can <strong>hallucinate</strong>.</p>
+  </div>
+</div>
+
+<p>The FSB draws exactly this line: firms have long used AI "to enhance internal operations and improve regulatory compliance" — that's the predictive kind — while generative AI "has given rise to new use cases, such as document summarisation, information retrieval, and code generation" <a class="src" href="https://www.fsb.org/uploads/R14112024.pdf">FSB 2024</a>. Two waves, two risk profiles.</p>
+
+<h2>Why the split is the whole game</h2>
+
+<p>Because the failure modes don't transfer. Ask the wrong question and you can't judge the claim:</p>
+
+<table>
+  <tr><th></th><th>Predictive ML</th><th>Generative AI</th></tr>
+  <tr><td><strong>Eats</strong></td><td>Tables of numbers</td><td>Text (and produces it)</td></tr>
+  <tr><td><strong>Gives</strong></td><td>A score / a number</td><td>Words, code, a summary</td></tr>
+  <tr><td><strong>Age</strong></td><td>Decades, mature</td><td>Since ~2022, immature</td></tr>
+  <tr><td><strong>Signature failure</strong></td><td>Bias, overfitting, black-box</td><td>Hallucination — confident and wrong</td></tr>
+  <tr><td><strong>Right question to ask</strong></td><td>"How often is it wrong, and is it fair?"</td><td>"Who checks the output before it's used?"</td></tr>
+</table>
+
+<p>A fraud-detection story and a chatbot story are both "AI in finance," but a smart question about one is a nonsense question about the other. Sorting first is what lets you ask the smart one.</p>
+
+<div class="warn">
+  <span class="label">The hype tell</span>
+  When a pitch says "AI" but won't tell you <em>which</em> — what it learns from, what it outputs, how often it's wrong — that vagueness is usually the product. The term for dressing ordinary software up as AI is <a href="../reference/ai-finance-glossary.html">AI-washing</a>, and "won't name the kind" is its clearest symptom.
+</div>
+
+<h2>The systemic twist</h2>
+
+<p>There's one risk that appears <em>because</em> the tools are shared. When thousands of firms lean on the same handful of AI providers, GPUs, and cloud platforms, and train on the same data, two dangers stack up: <strong>concentration risk</strong> (one provider fails, everyone's hit at once) and <strong>correlation risk</strong> (everyone's models behave alike, so a wobble becomes a stampede). The FSB warns that common models and data "could lead to increased market correlations, amplifying systemic risks during crises" <a class="src" href="https://www.fsb.org/uploads/R14112024.pdf">FSB 2024</a>. Keep this one in your pocket — it's the risk the excited coverage almost always skips.</p>
+
+<h2>Check yourself</h2>
+
+<p>Answer from memory. A miss here is worth more than a scroll back up.</p>
+
+<div class="quiz" data-quiz='[
+  {
+    "q":"A bank flags odd card transactions in real time. Which kind?",
+    "a":["Generative AI producing new text","Predictive ML scoring from tables","A rules engine, not really AI","Robo-advice giving allocations"],
+    "correct":1,
+    "why":"Numbers in, a fraud/not-fraud score out, learned from labelled history. That is textbook predictive ML — and one of the oldest, best-fitting uses because the data and the target are both clean."
+  },
+  {
+    "q":"A tool writes a plain-English summary of a 200-page filing. Its main risk?",
+    "a":["It will overfit the past","It may hallucinate falsehoods","It concentrates GPU supply","It cannot be backtested well"],
+    "correct":1,
+    "why":"Generating language is the generative kind, and its signature failure is fluent, confident output that is simply wrong. The summary still has to be checked against the filing."
+  },
+  {
+    "q":"A vendor says AI powers their product but wont say which kind or how it fails. That is a sign of?",
+    "a":["Strong proprietary technology","Ordinary regulatory caution","Possible AI-washing here","A generative model inside"],
+    "correct":2,
+    "why":"Refusing to name what the model learns from, outputs, or gets wrong is the clearest tell of AI-washing — dressing plain software up in an AI label. Vagueness is the product."
+  },
+  {
+    "q":"Why does everyone using the same AI providers threaten stability?",
+    "a":["Models become far too slow","Correlated behaviour amplifies swings","Hallucinations spread by email","Bias is impossible to detect"],
+    "correct":1,
+    "why":"Shared models, data, and providers make firms behave alike and pile risk onto a few suppliers — concentration plus correlation. The FSB flags this as a route by which a wobble becomes a crash."
+  }
+]'></div>
+
+<h2>Now do it to real headlines</h2>
+
+<p>This is the skill, not the definitions. Find three recent "AI in finance" headlines — a news site, a vendor's homepage, a LinkedIn post, whatever. For each, answer three questions out loud:</p>
+
+<details class="reveal">
+  <summary>The three questions — try each headline before opening</summary>
+  <ol>
+    <li><strong>Which kind?</strong> Does it score/forecast from numbers (predictive ML), or produce language/code (generative)? If you genuinely can't tell from what's written, that itself is the finding — note it.</li>
+    <li><strong>What's the built-in risk?</strong> Bias / overfitting / black-box for predictive; hallucination for generative; concentration/correlation if it's about scale.</li>
+    <li><strong>What are they not saying?</strong> How often is it wrong? What does it train on? Who checks the output? The gap is where the hype lives.</li>
+  </ol>
+</details>
+
+<div class="win">
+  <span class="label">Did it work?</span>
+  Bring your three headlines to your teacher and say how you sorted each one — especially any you couldn't sort. That "couldn't sort" pile is the most useful thing you'll produce this lesson; it's exactly where the vague claims hide, and reading a few together is worth more than another definition.
+</div>
+
+<h2>Read this next</h2>
+
+<p><strong>Primary source:</strong> <a href="https://www.fsb.org/uploads/R14112024.pdf">FSB — The Financial Stability Implications of Artificial Intelligence (2024)</a>. The best single landscape document, written by a body with nothing to sell. Read the executive summary (a few pages) — it lays out the use cases and the systemic risks in exactly the frame this lesson uses.</p>
+
+<div class="footer">
+  <p><strong>Reference:</strong> <a href="../reference/ai-finance-glossary.html">AI in Finance Glossary</a> · <a href="../index.html">Course index</a></p>
+  <p><strong>Next:</strong> a tour of the main applications — fraud, credit, trading, robo-advice — and which kind of AI each really is under the label. Ask when you're ready.</p>
+  <p>Anything here unclear, or clashing with something you've read? Ask. That's what your teacher is for — this page is a starting point, not the last word.</p>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI in Finance Glossary — Reference</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="ref">
+
+<p class="eyebrow">Reference · AI in Finance</p>
+<h1>Glossary</h1>
+<p class="subtitle">The vocabulary you need to read the news and the pitches critically. "AI", "algorithm", and "model" are used as marketing words all the time — each definition below pins the term to what it actually means, with a high-trust link as the authority.</p>
+
+<div class="note">
+  <span class="label">Why this card exists</span>
+  Half of "AI in finance" confusion is one word doing two jobs. The single most useful thing on this page is the split between <strong>predictive ML</strong> and <strong>generative AI</strong> — get those two straight and most headlines sort themselves. Print this; keep it beside the news.
+</div>
+
+<h2>The two kinds of AI</h2>
+
+<dl>
+  <dt>Predictive ML (machine learning)</dt>
+  <dd>Software that learns statistical patterns from historical data — usually numbers in tables — to <em>score</em> or <em>forecast</em> something new: is this transaction fraud, will this borrower default, where's this price heading. Decades old, well understood, and behind most "AI" already running in banks. Its outputs are predictions with error rates, not statements of fact. <a class="src" href="https://www.gao.gov/assets/gao-25-107197.pdf">GAO 2025</a></dd>
+
+  <dt>Generative AI / LLM (large language model)</dt>
+  <dd>Software that <em>produces</em> new content — text, code, summaries — by predicting plausible next words. The post-2022 wave (ChatGPT and kin). In finance: summarising filings, drafting reports, chatbots, coding help. New, powerful, and prone to <strong>hallucination</strong>. FSB: GenAI "has given rise to new use cases, such as document summarisation, information retrieval, and code generation." <a class="src" href="https://www.fsb.org/uploads/R14112024.pdf">FSB 2024</a></dd>
+
+  <dt>Algorithm</dt>
+  <dd>Just a fixed set of rules a computer follows. A rules-based "if balance &lt; 0, flag it" is an algorithm but not AI. Marketing blurs this deliberately — "our algorithm" often means ordinary software. AI is the subset that <em>learns</em> its rules from data rather than having them written by hand.</dd>
+
+  <dt>Model</dt>
+  <dd>The trained artefact that does the predicting or generating — the thing that came out of the learning process. "The model says approve" means a piece of statistical machinery produced that output; it is not a person's judgment and carries the biases of its training data.</dd>
+</dl>
+
+<h2>What it's used for</h2>
+
+<dl>
+  <dt>Fraud / anomaly detection</dt>
+  <dd>Predictive ML flags transactions that don't fit learned normal patterns. One of the oldest, best-fit uses — lots of labelled data, a clear yes/no target. <a class="src" href="https://www.gao.gov/assets/gao-25-107197.pdf">GAO 2025</a></dd>
+
+  <dt>Credit scoring / underwriting</dt>
+  <dd>Predictive ML estimates default risk to decide lending and pricing. High-stakes and fairness-sensitive — the classic site of <strong>algorithmic bias</strong> concerns, since the model can inherit discrimination present in historical data.</dd>
+
+  <dt>Algorithmic trading</dt>
+  <dd>Software that generates and executes trades, sometimes using ML to predict short-term moves. Speed and scale amplify both profit and systemic risk — many firms running similar models can move together. <a class="src" href="https://www.cftc.gov/media/10626/TAC_AIReport050224/download">CFTC 2024</a></dd>
+
+  <dt>Robo-advice</dt>
+  <dd>Automated portfolio allocation and rebalancing from a customer's risk profile. Mostly rules + optimisation with an AI label; the "advice" is templated, not bespoke.</dd>
+
+  <dt>RegTech / SupTech</dt>
+  <dd>AI used <em>for</em> compliance (RegTech, by firms) and <em>for</em> supervision (SupTech, by regulators) — spotting reporting errors, outliers, potential violations. Regulators use AI too. <a class="src" href="https://www.gao.gov/assets/gao-25-107197.pdf">GAO 2025</a></dd>
+</dl>
+
+<h2>What goes wrong — the risk vocabulary</h2>
+
+<dl>
+  <dt>Hallucination</dt>
+  <dd>A generative model producing fluent, confident output that is simply false. The signature failure of LLMs; the reason a summary of a filing still needs checking against the filing.</dd>
+
+  <dt>Algorithmic bias</dt>
+  <dd>A model systematically disadvantaging a group because its training data encoded past discrimination. The model looks neutral (it never sees "race") but reproduces the pattern through correlated proxies.</dd>
+
+  <dt>Black box / explainability</dt>
+  <dd>Many models can't say <em>why</em> they produced an output in terms a human can audit. A problem when the law requires a reason for a loan denial, or a regulator asks how a trade decision was made.</dd>
+
+  <dt>Overfitting</dt>
+  <dd>A model that memorised quirks of its training data instead of learning a general pattern — looks brilliant on the past, fails on the future. In trading, a backtest that "would have made millions" is often this.</dd>
+
+  <dt>Model risk</dt>
+  <dd>The umbrella term for loss caused by a model being wrong, misused, or fed bad data. FSB/GAO frame most AI-in-finance danger as model risk at scale.</dd>
+
+  <dt>Concentration risk</dt>
+  <dd>Heavy reliance on a few providers of AI models, GPUs, and cloud. If one fails or is compromised, many institutions are hit at once. A headline systemic concern in the FSB report. <a class="src" href="https://www.fsb.org/uploads/R14112024.pdf">FSB 2024</a></dd>
+
+  <dt>Correlation / herding risk</dt>
+  <dd>Many firms using the same models and training data start behaving alike, amplifying market swings and turning a wobble into a crash. FSB: common models/data "could lead to increased market correlations." <a class="src" href="https://www.fsb.org/uploads/R14112024.pdf">FSB 2024</a></dd>
+
+  <dt>AI-washing</dt>
+  <dd>Marketing ordinary software, or a rules engine, as "AI" — or overstating what a real model can do. The tell: no clear statement of what the model learns from, what it predicts, or how often it's wrong. Regulators have begun treating exaggerated AI claims as a disclosure issue.</dd>
+</dl>
+
+<div class="footer">
+  <p><strong>Course:</strong> <a href="../index.html">AI in Finance</a> · <a href="../lessons/0001-the-two-ais.html">Lesson 01 — The Two AIs</a></p>
+  <p>Term missing or a definition feels off? Tell your teacher — this card is meant to be argued with and grow.</p>
+</div>
+
+</body>
+</html>

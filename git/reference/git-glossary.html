@@ -136,7 +136,15 @@
 
   <dt>pull request (PR)</dt>
   <dd>A GitHub/GitLab feature (not a Git command): "review my branch and merge it into <code>main</code>." Pushing the branch is the Git half; the review and merge-button live on the website. Merging usually creates a <code>--no-ff</code> merge commit.</dd>
+
+  <dt>git push --force-with-lease</dt>
+  <dd>Overwrite a remote branch with rewritten history, but abort if someone <em>else</em> pushed to it since your last fetch — the safe force. Legitimate only on a branch <strong>only you touch</strong> (e.g. squashing your own PR branch before merge). Never on a shared branch like <code>main</code>.</dd>
 </dl>
+
+<div class="note">
+  <span class="label">The rewrite rule (refined)</span>
+  Rewrite history freely on a branch <strong>only you</strong> build on; <strong>never</strong> on one others build on. <code>amend</code>, <code>reset --soft</code>, and squashing are fine on an unpushed branch or a solo PR branch (with <code>--force-with-lease</code>); on <code>main</code> or any shared branch, use <code>revert</code> instead. This supersedes the stricter "never after pushing" phrasing from Lesson 03 — pushing to <em>your own</em> PR branch is not "sharing" in the dangerous sense.
+</div>
 
 <h2>Undoing things</h2>
 <dl>
