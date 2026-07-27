@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 02 — The Application Tour</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .stop{border:1px solid var(--rule);border-radius:6px;padding:1rem 1.2rem;margin:1.25rem 0;background:#fff}
+  .stop h3{margin:0 0 .35rem;font-size:1.05rem}
+  .stop .tag{font-family:ui-monospace,Consolas,monospace;font-size:.7rem;letter-spacing:.1em;
+    text-transform:uppercase;display:block;margin-bottom:.4rem}
+  .tag.pred{color:var(--ok)}
+  .tag.gen{color:var(--accent)}
+  .tag.mix{color:#8a6d1a}
+  .stop p{font-size:.92rem;margin:.35rem 0}
+  .fit{font-family:ui-monospace,Consolas,monospace;font-size:.74rem;letter-spacing:.06em;
+    display:inline-block;border-radius:999px;padding:.08rem .6rem;border:1px solid}
+  .fit.good{color:var(--ok);background:var(--ok-soft);border-color:var(--ok)}
+  .fit.mid{color:#8a6d1a;background:#faf6e8;border-color:#d9c77a}
+  .fit.poor{color:var(--bad);background:var(--bad-soft);border-color:var(--bad)}
+</style>
+</head>
+<body>
+
+<p class="eyebrow">AI in Finance · Lesson 02</p>
+<h1>The Application Tour</h1>
+<p class="subtitle">Five jobs wear the "AI" label in finance. Under the label they are wildly different — different machines, different track records, and very different odds of actually working. This tour gives you the map, and one new tool: the fit test.</p>
+
+<div class="note">
+  <span class="label">The win</span>
+  By the end of this page you can hear any of the five big applications named — fraud, credit, trading, robo-advice, document work — and say <strong>which kind of AI it really is</strong>, <strong>how well AI fits that job</strong>, and <strong>the one smart question to ask about it</strong>.
+</div>
+
+<h2>First, 30 seconds of Lesson 01</h2>
+
+<p>From memory, before reading on: what are the two kinds of AI, what does each eat and produce, and what is each one's signature failure? Say it out loud. (Answer's in <a href="0001-the-two-ais.html">Lesson 01</a> and the <a href="../reference/ai-finance-glossary.html">glossary</a> if you blank — but try first. The reach is the exercise.)</p>
+
+<h2>The new tool: the fit test</h2>
+
+<p>Not every job suits machine learning equally. Three questions predict whether an AI application is on solid ground, long before you see any vendor's accuracy claim:</p>
+
+<ol>
+  <li><strong>Is there lots of labelled history?</strong> ML learns from examples. Millions of past transactions marked fraud/not-fraud is a feast; a handful of ambiguous cases is starvation.</li>
+  <li><strong>Is there a clear right answer?</strong> "Was this transaction fraudulent?" has a yes/no ground truth. "Was this a good investment?" depends on horizon, luck, and what you compare it to.</li>
+  <li><strong>Does the future resemble the past?</strong> ML assumes tomorrow rhymes with yesterday. Card-fraud patterns mostly do. Markets — where every player adapts to every other player — often don't.</li>
+</ol>
+
+<p>Three yeses: AI probably genuinely works there. Each no: subtract confidence. This one test explains most of what you'll see on the tour.</p>
+
+<h2>The five stops</h2>
+
+<div class="stop">
+  <span class="tag pred">Stop 1 · Predictive ML</span>
+  <h3>Fraud &amp; anomaly detection <span class="fit good">fit: excellent</span></h3>
+  <p>Models score each transaction against learned normal patterns and flag the odd ones in milliseconds. The oldest and best-fitting use in the book: oceans of labelled examples, a clear yes/no target, and fraud patterns that repeat. That's three yeses. The GAO lists it among the most established uses in banking <a class="src" href="https://www.gao.gov/assets/gao-25-107197.pdf">GAO 2025</a>.</p>
+  <p><strong>Built-in risk:</strong> false positives — legitimate customers blocked — and bias in who gets flagged.
+  <strong>Smart question:</strong> "What's the false-positive rate, and who reviews the flags?"</p>
+</div>
+
+<div class="stop">
+  <span class="tag pred">Stop 2 · Predictive ML</span>
+  <h3>Credit scoring &amp; underwriting <span class="fit mid">fit: good, but high-stakes</span></h3>
+  <p>Models estimate default risk to decide who gets a loan and at what price. Technically a good fit — plenty of repayment history, a clear target (did they repay?). The trouble isn't accuracy, it's <em>stakes</em>: the training data encodes decades of past lending discrimination, so the model can reproduce bias through innocent-looking proxies like postcode. And when the law demands a reason for a denial, a black-box model struggles to give one <a class="src" href="https://www.gao.gov/assets/gao-25-107197.pdf">GAO 2025</a>.</p>
+  <p><strong>Built-in risk:</strong> algorithmic bias; black-box denials the lender can't explain.
+  <strong>Smart question:</strong> "Can you explain an individual denial, and has the model been tested for disparate impact?"</p>
+</div>
+
+<div class="stop">
+  <span class="tag mix">Stop 3 · Mostly rules, some ML</span>
+  <h3>Algorithmic trading <span class="fit poor">fit: weakest of the five</span></h3>
+  <p>Most "algo trading" is execution plumbing — rules that slice big orders and route them fast, no learning involved. The ML part — predicting price moves — faces the worst possible fit-test scores: no stable ground truth, and a future that actively <em>stops</em> resembling the past, because markets are adversarial — every pattern found gets traded away by the people who found it. That's why brilliant backtests keep failing live: <a href="../reference/ai-finance-glossary.html">overfitting</a> is the house specialty here. The CFTC's concern is less about any one firm's model and more about many firms' models moving together <a class="src" href="https://www.cftc.gov/media/10626/TAC_AIReport050224/download">CFTC 2024</a>.</p>
+  <p><strong>Built-in risk:</strong> overfit strategies; herding — similar models amplifying the same swing.
+  <strong>Smart question:</strong> "How did it perform <em>after</em> the backtest, out of sample, live?"</p>
+</div>
+
+<div class="stop">
+  <span class="tag mix">Stop 4 · Rules wearing an AI label</span>
+  <h3>Robo-advice <span class="fit mid">fit: fine — because it barely uses AI</span></h3>
+  <p>You answer a risk questionnaire; software maps you to a model portfolio of cheap index funds and rebalances on schedule. Useful and cheap — but under the hood it's mostly rules and standard portfolio math, decades old, with little learning anywhere. This is the tour's prime site of <a href="../reference/ai-finance-glossary.html">AI-washing</a>: the "AI" in the pitch is often the questionnaire's if-then table. The advice is templated, not bespoke.</p>
+  <p><strong>Built-in risk:</strong> mislabelling — paying an AI premium for a lookup table; advice too generic for your situation.
+  <strong>Smart question:</strong> "What exactly does the model <em>learn</em>, and what would change if you removed the word AI?"</p>
+</div>
+
+<div class="stop">
+  <span class="tag gen">Stop 5 · Generative AI</span>
+  <h3>Document work <span class="fit mid">fit: genuinely new, needs a checker</span></h3>
+  <p>Summarising 200-page filings, drafting reports, answering customers in chat, helping staff search policy manuals. This is the post-2022 wave — the FSB names document summarisation, information retrieval, and code generation as the genuinely new use cases <a class="src" href="https://www.fsb.org/uploads/R14112024.pdf">FSB 2024</a>. The capability is real; the catch is the signature failure you already know: fluent, confident <a href="../reference/ai-finance-glossary.html">hallucination</a>. So every serious deployment keeps a human between the output and anything that matters.</p>
+  <p><strong>Built-in risk:</strong> hallucinated facts flowing into reports, filings, or customer answers.
+  <strong>Smart question:</strong> "Who checks the output before it's used, and what happens when it's wrong?"</p>
+</div>
+
+<div class="warn">
+  <span class="label">The pattern to keep</span>
+  Notice the shape of the tour: AI works best where the job is <strong>boring, repetitive, and data-rich</strong> (fraud), and worst where the headlines are most breathless (beating the market). The excitement of a use case and its actual fit are close to <em>inversely</em> related. That inversion is one of the most reliable hype detectors you'll ever own.
+</div>
+
+<h2>Check yourself</h2>
+
+<p>From memory — a miss now is a memory later.</p>
+
+<div class="quiz" data-quiz='[
+  {
+    "q":"Why is fraud detection the best-fitting AI use of the five?",
+    "a":["Regulators require banks use it","Labelled data, clear target, stable patterns","It is newest and most heavily funded","It runs fully without human review"],
+    "correct":1,
+    "why":"Fraud detection passes all three fit-test questions: oceans of labelled examples, a crisp yes/no ground truth, and patterns that mostly repeat. Three yeses — the rare full score."
+  },
+  {
+    "q":"A trading strategy shows a stunning backtest. The first suspicion?",
+    "a":["Overfitting to past market quirks","Hallucination inside the model","Concentration on cloud providers","Bias against protected groups"],
+    "correct":0,
+    "why":"Markets are adversarial and non-stationary, so a model can memorise the past brilliantly and fail live. A great backtest is evidence of fit to history, not fit to the future — ask for out-of-sample, live results."
+  },
+  {
+    "q":"Credit scoring fits ML well technically. So what is the real problem?",
+    "a":["Too little repayment data exists to train","Models run far too slowly for lending","Bias via proxies and unexplainable denials","Fraud patterns change faster than models"],
+    "correct":2,
+    "why":"The data and target are fine — the stakes are the issue. Training data encodes past discrimination, which resurfaces through proxies like postcode, and black-box models struggle to give the legally required reason for a denial."
+  },
+  {
+    "q":"A robo-adviser markets its AI-powered portfolios. Most likely under the hood?",
+    "a":["A large language model writing advice","An ML model predicting future markets","Rules and portfolio math with AI label","A fraud-detection model repurposed here"],
+    "correct":2,
+    "why":"Robo-advice is mostly a risk questionnaire mapped to model portfolios by rules and standard optimisation — useful, cheap, and decades old. The AI label is frequently marketing: the tour&apos;s prime AI-washing site."
+  },
+  {
+    "q":"A bank deploys generative AI to summarise filings. The one control that matters most?",
+    "a":["A human checks output before use","A bigger model with more parameters","Retraining it every single quarter","Keeping the training data secret"],
+    "correct":0,
+    "why":"Generative AI&apos;s signature failure is fluent, confident falsehood. No amount of scale removes it, so serious deployments keep a human between the output and anything consequential."
+  }
+]'></div>
+
+<h2>Now run the fit test in the wild</h2>
+
+<p>Pick <strong>two</strong> of the five applications and find a real vendor page or news story for each (search "AI fraud detection platform", "AI trading", "robo advisor" — anything current). For each, work through:</p>
+
+<details class="reveal">
+  <summary>The drill — attempt before opening</summary>
+  <ol>
+    <li><strong>Which stop is this?</strong> And which kind of AI — predictive, generative, or rules wearing the label?</li>
+    <li><strong>Run the fit test.</strong> Labelled history? Clear right answer? Future like the past? Score it out of three.</li>
+    <li><strong>Ask the stop's smart question of the page.</strong> Does the vendor answer it anywhere? (Usually: no. Note what's missing.)</li>
+  </ol>
+</details>
+
+<div class="win">
+  <span class="label">Did it work?</span>
+  Bring both write-ups back to your teacher — especially any claim that wouldn't sort cleanly into one stop, or a fit-test question you couldn't score from what was written. Those edges are where the next lesson comes from.
+</div>
+
+<h2>Read this next</h2>
+
+<p><strong>Primary source:</strong> <a href="https://www.gao.gov/assets/gao-25-107197.pdf">US GAO — Artificial Intelligence: Use and Oversight in Financial Services (2025)</a>. The plainest-English tour of who actually uses what, written by an auditor with nothing to sell. Skim the use-case sections and notice how closely their benefits/risks framing tracks the five stops above.</p>
+
+<div class="footer">
+  <p><strong>Reference:</strong> <a href="../reference/ai-finance-glossary.html">AI in Finance Glossary</a> · <a href="0001-the-two-ais.html">Lesson 01 — The Two AIs</a> · <a href="../index.html">Course index</a></p>
+  <p><strong>Next:</strong> the risk lens — bias, black-box, and systemic correlation get their own lesson, with the real incidents behind each. Ask when you're ready.</p>
+  <p>Anything unclear, or a claim you'd push back on? Ask. That's what your teacher is for.</p>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
