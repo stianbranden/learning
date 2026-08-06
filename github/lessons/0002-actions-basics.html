@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 2 — Actions Basics</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .anatomy{margin:1.5rem 0;border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+  .anatomy-row{display:flex;align-items:flex-start;gap:.8rem;padding:.75rem 1rem;border-bottom:1px solid var(--rule);font-size:.92rem}
+  .anatomy-row:last-child{border-bottom:none}
+  .anatomy-row .k{font-family:ui-monospace,Consolas,monospace;font-weight:600;color:var(--accent);flex:none;width:7.5rem}
+  .nest{font-family:ui-monospace,Consolas,monospace;font-size:.8rem;line-height:1.7;
+        background:var(--code-bg);border-left:3px solid var(--accent);
+        padding:.9rem 1.1rem;border-radius:0 4px 4px 0;margin:1.25rem 0;white-space:pre;overflow-x:auto}
+  .lvl1{color:var(--accent)}
+  .lvl2{color:#33415c}
+  .lvl3{color:var(--ok)}
+</style>
+</head>
+<body>
+
+<p class="eyebrow">Lesson 02 · GitHub platform · actions</p>
+<h1>Actions Basics</h1>
+<p class="subtitle">Automation that runs when your repo changes. One YAML file, three nested ideas — workflow, job, step — and you can read or write any basic CI pipeline.</p>
+
+<p>An <strong>Action</strong> (the workflow, really — "Actions" is GitHub's name for the whole feature) is code that runs on GitHub's own servers in response to something happening in your repo: a push, a PR, a schedule, a manual button click. No servers to manage — you write YAML, GitHub runs it.</p>
+
+<h2>The nesting: workflow → job → step</h2>
+
+<p>Every workflow file lives at <code>.github/workflows/&lt;name&gt;.yml</code> — that exact folder is how GitHub finds it, nothing to register elsewhere.</p>
+
+<div class="nest"><span class="lvl1">name: CI</span>                          <span class="cmt" style="color:var(--ink-soft)"># shown in the Actions tab</span>
+<span class="lvl1">on: push</span>                            <span class="cmt" style="color:var(--ink-soft)"># the trigger — what starts this workflow</span>
+
+<span class="lvl2">jobs:</span>
+<span class="lvl2">  build:</span>                             <span class="cmt" style="color:var(--ink-soft)"># a job = one fresh virtual machine</span>
+<span class="lvl2">    runs-on: ubuntu-latest</span>       <span class="cmt" style="color:var(--ink-soft)"># which OS image to boot</span>
+<span class="lvl3">    steps:</span>
+<span class="lvl3">      - uses: actions/checkout@v4</span> <span class="cmt" style="color:var(--ink-soft)"># step 1: reuse someone's packaged action</span>
+<span class="lvl3">      - run: echo "hello"</span>          <span class="cmt" style="color:var(--ink-soft)"># step 2: run a raw shell command</span></div>
+
+<div class="anatomy">
+  <div class="anatomy-row"><span class="k">Workflow</span><div>The whole file. One repo can have many, each its own trigger and purpose (CI, deploy, nightly cleanup).</div></div>
+  <div class="anatomy-row"><span class="k">on:</span><div>The trigger. <code>push</code>, <code>pull_request</code>, <code>schedule</code> (cron), <code>workflow_dispatch</code> (manual "Run workflow" button). Can scope to branches: <code>on: {push: {branches: [main]}}</code>.</div></div>
+  <div class="anatomy-row"><span class="k">jobs:</span><div>One or more jobs. Each job = a brand-new, disposable VM. Jobs run in parallel by default, unless you say <code>needs:</code> another job.</div></div>
+  <div class="anatomy-row"><span class="k">runs-on:</span><div>Which OS image boots for the job — almost always <code>ubuntu-latest</code> unless you specifically need Windows or macOS.</div></div>
+  <div class="anatomy-row"><span class="k">steps:</span><div>Ordered list inside a job. Two flavors: <code>uses:</code> runs someone else's packaged action (from the <a href="https://github.com/marketplace?type=actions">Marketplace</a>); <code>run:</code> runs a raw shell command. Mix freely.</div></div>
+</div>
+
+<div class="note">
+  <span class="label">Why almost every workflow starts with actions/checkout</span>
+  The VM boots empty — it does not have your repo's files. <code>actions/checkout@v4</code> is the near-universal first step: it clones your repo onto the runner so later steps (<code>run:</code> commands, build tools) have something to work on. Forgetting it is the most common first-workflow bug — every file-based command after it just fails to find anything.
+</div>
+
+<h2>A real, minimal CI workflow for this repo</h2>
+
+<p>This workspace has no build step (see <a href="../../CLAUDE.md">CLAUDE.md</a> — static HTML, nothing compiles), so "CI" here means something honest and small: a sanity check that fails loudly if something's actually broken, not a fake green checkmark.</p>
+
+<pre><code>name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: root index.html exists
+        run: test -f index.html</code></pre>
+
+<p>Two triggers at once: every push to <code>main</code>, and every pull request (against any branch) — so a broken PR gets flagged before it merges, not after. <code>test -f</code> is a plain shell check, not a special GitHub thing — anything you could type at a terminal works in a <code>run:</code> step.</p>
+
+<div class="win">
+  <span class="label">Your win — ship a real workflow</span>
+  In <a href="https://github.com/stianbranden/learning">this repo</a>: create <code>.github/workflows/ci.yml</code> with the YAML above (or your own small check — e.g. confirm every course's <code>index.html</code> exists). Commit and push to a branch, open a PR, and watch the <strong>Checks</strong> section at the bottom of the PR run it live. Then check the <strong>Actions tab</strong> at the repo's top nav — every run, past and present, lives there with full logs per step.
+</div>
+
+<div class="quiz" data-quiz='[
+  {"q":"A workflow YAML file needs to be in a specific location for GitHub to find it. Where?","a":[".github/workflows/ folder","any folder, referenced from a repo setting","workflows/ at the repo root",".github/ folder directly, no subfolder"],"correct":0,"why":"GitHub scans .github/workflows/*.yml specifically. That exact path is how a file becomes a workflow -- nothing else registers it."},
+  {"q":"A job's first step is missing actions/checkout, and a later run: step does cat index.html. What happens?","a":["it works, checkout is optional for simple repos","it fails, the file is not on the fresh VM","it works, but only for public repos","it fails, cat is not allowed in run: steps"],"correct":1,"why":"Each job boots a brand-new VM with no repo files on it. Without actions/checkout, later steps that expect repo files fail because nothing was ever cloned there."},
+  {"q":"A workflow has on: {push: {branches: [main]}, pull_request: {}}. A PR is opened from a feature branch into main. Does the workflow run?","a":["no, only direct pushes to main trigger it","yes, the pull_request trigger fires on PR open","yes, but only after the PR is merged","no, pull_request needs an explicit branches list too"],"correct":1,"why":"pull_request with no branch filter fires whenever a PR targeting any branch is opened, synced, or reopened -- independent of the push trigger."},
+  {"q":"A step is written as uses: actions/checkout@v4 instead of run: git clone ... What is uses: doing differently from run:?","a":["it runs a raw shell command like run: does","it invokes someone else's packaged, reusable action","it only works on the first step of a job","it skips the step unless on a schedule trigger"],"correct":1,"why":"uses: pulls in a pre-built, shareable action (versioned, from the Marketplace or a repo) rather than typing the equivalent shell commands yourself with run:."}
+]'></div>
+
+<h2>Go deeper</h2>
+<p><strong>Primary source — read this one:</strong> <a href="https://docs.github.com/en/actions/writing-workflows/quickstart">GitHub Docs — Actions Quickstart</a>. Walks the exact workflow → job → step structure with a real example.</p>
+<p><strong>Then do it for real:</strong> <a href="https://skills.github.com/">GitHub Skills — Hello GitHub Actions</a>, or the CI workflow you just wrote above.</p>
+
+<div class="footer">
+  <p><strong>Reference:</strong> <a href="../reference/">reference/</a> — a workflow-YAML cheat sheet is worth building once a few more triggers/actions get used.</p>
+  <p><strong>Previous:</strong> <a href="0001-issues.html">Lesson 01 — Issues</a> · <strong>Index:</strong> <a href="../index.html">all lessons</a></p>
+  <p class="no-print"><strong>Anything fuzzy?</strong> Ask your teacher — the agent in this workspace.</p>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
