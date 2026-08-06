@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 1 — Issues</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .anatomy{margin:1.5rem 0;border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+  .anatomy-row{display:flex;align-items:flex-start;gap:.8rem;padding:.75rem 1rem;border-bottom:1px solid var(--rule);font-size:.92rem}
+  .anatomy-row:last-child{border-bottom:none}
+  .anatomy-row .k{font-family:ui-monospace,Consolas,monospace;font-weight:600;color:var(--accent);flex:none;width:6.5rem}
+  .chip{display:inline-block;font-family:ui-monospace,Consolas,monospace;font-size:.76rem;
+        border-radius:999px;padding:.08rem .6rem;margin:.1rem .2rem .1rem 0}
+  .chip.bug{background:#fbeeee;color:var(--bad);border:1px solid #f0cfcf}
+  .chip.enh{background:#eef1f6;color:#33415c;border:1px solid #d5dbe6}
+  .chip.docs{background:var(--ok-soft);color:var(--ok);border:1px solid #cfe6da}
+</style>
+</head>
+<body>
+
+<p class="eyebrow">Lesson 01 · GitHub platform · issues</p>
+<h1>Issues</h1>
+<p class="subtitle">The unit of work on GitHub that isn't a commit. What it's for, how it links to your PRs, and the one syntax trick that closes it automatically.</p>
+
+<p>You know commits and PRs cold (see <a href="../../git/lessons/0006-remotes-and-pull-requests.html">the git course</a>). An <strong>issue</strong> is different: it's not a change to code, it's a <em>tracked conversation</em> — a bug report, a task, a question — that lives on GitHub, not in your git history at all. It exists so work can be planned and discussed <em>before</em> a commit exists to fix it.</p>
+
+<h2>Anatomy of an issue</h2>
+
+<div class="anatomy">
+  <div class="anatomy-row"><span class="k">Title</span><div>One line, searchable. "Login button misaligned on mobile", not "bug".</div></div>
+  <div class="anatomy-row"><span class="k">Body</span><div>Markdown. Steps to reproduce, task checklist (<code>- [ ] item</code> renders as a live checkbox), screenshots.</div></div>
+  <div class="anatomy-row"><span class="k">Labels</span><div>Tags for filtering: <span class="chip bug">bug</span><span class="chip enh">enhancement</span><span class="chip docs">documentation</span> and any custom ones a repo defines.</div></div>
+  <div class="anatomy-row"><span class="k">Assignee</span><div>Who's doing it. Doesn't have to be you — issues coordinate a team, not just remind yourself.</div></div>
+  <div class="anatomy-row"><span class="k">Milestone</span><div>Groups issues under a target ("v1.0 release") with a progress bar. Optional, useful once a repo has enough open issues to need grouping.</div></div>
+</div>
+
+<p>Anyone with repo access can open one — it needs no code, no branch, no permission beyond "can comment here." That's the point: it's the cheapest way to record "this needs doing" before anyone has written a line to do it.</p>
+
+<h2>The one trick: closing an issue from a commit</h2>
+
+<p>Write a specific keyword + issue number in a commit message or PR description, and merging that PR <strong>closes the issue automatically</strong> — no separate click.</p>
+
+<pre><code>git commit -m "Fix mobile nav overflow
+
+Fixes #12"</code></pre>
+
+<table>
+  <tr><th>Keyword</th><th>Effect when merged into the default branch</th></tr>
+  <tr><td><code>Fixes #12</code>, <code>Closes #12</code>, <code>Resolves #12</code></td><td>Issue #12 closes automatically</td></tr>
+  <tr><td>plain <code>#12</code></td><td>Just links — commit shows up in the issue's timeline, issue stays open</td></tr>
+</table>
+
+<div class="note">
+  <span class="label">Why this matters more than it looks</span>
+  This is the actual link between "planned work" (issue) and "the change that did it" (commit/PR). Open the issue later and you see every commit and PR that referenced it — a free audit trail with zero extra effort, as long as you remember the keyword.
+</div>
+
+<p>Works the same in a PR description, not just a commit message — and it's the more common place to put it, since a PR is usually reviewed before merge while a raw commit message isn't.</p>
+
+<div class="win">
+  <span class="label">Your win — try it for real, right now</span>
+  On <a href="https://github.com/stianbranden/learning">this repo on GitHub</a>: open a new issue (Issues tab → New issue) describing something small and real you'd actually want changed here. Add a label. Then, next time you commit a fix for it, add <code>Fixes #&lt;number&gt;</code> to the message and push — watch the issue close itself when the change lands on <code>main</code>.
+</div>
+
+<div class="quiz" data-quiz='[
+  {"q":"An issue exists but no branch or commit has been created for it yet. Is that normal?","a":["no, an issue always needs a branch first","yes, issues track work before code exists","no, only closed issues can lack a branch","yes, but only for bug labels specifically"],"correct":1,"why":"An issue is a tracked conversation, independent of git history. It commonly exists well before any branch or commit addresses it."},
+  {"q":"A commit message says \"Update nav styling, #12\" (no Fixes/Closes/Resolves). What happens to issue 12 when this merges to the default branch?","a":["issue 12 closes automatically","issue 12 closes only if it has the bug label","nothing closes, but the commit links to issue 12","the commit is rejected until a keyword is added"],"correct":2,"why":"Plain #12 without a closing keyword (Fixes/Closes/Resolves) only creates a link in the issue timeline. The issue stays open."},
+  {"q":"Where can the Fixes #12 keyword go to trigger auto-close on merge?","a":["only in the very first commit on a branch","a commit message or a pull request description","only in the issue body itself","only in a comment on the issue, not in git"],"correct":1,"why":"GitHub scans commit messages and PR descriptions for the closing keywords; either location triggers auto-close when merged to the default branch."}
+]'></div>
+
+<h2>Go deeper</h2>
+<p><strong>Primary source — read this one:</strong> <a href="https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue">GitHub Docs — Linking a pull request to an issue</a>. Covers every closing keyword and the edge cases (multiple issues, cross-repo linking).</p>
+<p><strong>Then do it for real:</strong> <a href="https://skills.github.com/">GitHub Skills — Communicate using Markdown</a>, or just use the real issue you opened above.</p>
+
+<div class="footer">
+  <p><strong>Next:</strong> Lesson 2 — GitHub Actions basics (coming next session).</p>
+  <p><strong>Index:</strong> <a href="../index.html">all lessons</a> · <strong>Related:</strong> <a href="../../git/lessons/0006-remotes-and-pull-requests.html">Git course — Remotes &amp; Pull Requests</a></p>
+  <p class="no-print"><strong>Anything fuzzy?</strong> Ask your teacher — the agent in this workspace.</p>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
