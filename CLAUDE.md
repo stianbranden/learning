@@ -26,7 +26,6 @@ started with `/teach <topic>` from the root.
   lessons/                NNNN-slug.html — the lessons, four-digit zero-padded, ordered
   reference/              living glossary + pattern cards, cited to primary sources
   assets/
-    style.css             shared course styling
     quiz.js               retrieval-practice quiz component
 ```
 
@@ -54,12 +53,13 @@ was needed. Match the existing course's structure when adding to it.
   formatting leaks no answer; feedback is immediate and answers can't be changed after
   commit (the miss is the retrieval-practice point). See the header comment in
   `git/assets/quiz.js`.
-- **CSS custom properties** (`--rule`, `--accent`, `--ink-soft`, `--ok`, `--bad`, etc.)
-  come from each course's `assets/style.css`. Lesson-specific styling goes in an inline
-  `<style>` block in the lesson; shared styling lives in `style.css`.
-- **`ponytail:` comments mark deliberate shortcuts** (e.g. root `index.html` borrows the
-  git stylesheet instead of duplicating one) — they name the upgrade path. Honor the
-  stated trigger before "fixing" them.
+- **One shared stylesheet — no per-course CSS.** All courses use the single
+  `assets/style.css` at the repo root. **Do not create per-course `style.css` files.**
+  CSS custom properties (`--rule`, `--accent`, `--ink-soft`, `--ok`, `--bad`, etc.) are
+  defined there. If a course needs a different accent colour, override `--accent` and
+  `--accent-soft` in a one-line `<style>:root { ... }</style>` block in that course's
+  HTML pages (see `agile/` for the pattern). Lesson-specific styling goes in an inline
+  `<style>` block in the lesson; shared styling lives in the root `style.css`.
 - Lessons name **both the CLI command and its VS Code GUI equivalent** where relevant —
   a standing constraint from the git mission.
 
