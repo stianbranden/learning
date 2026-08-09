@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 3 — Projects</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .anatomy{margin:1.5rem 0;border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+  .anatomy-row{display:flex;align-items:flex-start;gap:.8rem;padding:.75rem 1rem;border-bottom:1px solid var(--rule);font-size:.92rem}
+  .anatomy-row:last-child{border-bottom:none}
+  .anatomy-row .k{font-family:ui-monospace,Consolas,monospace;font-weight:600;color:var(--accent);flex:none;width:8rem}
+  .layout-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin:1.5rem 0}
+  .layout-card{border:1px solid var(--rule);border-radius:6px;padding:1rem 1.1rem;font-size:.88rem}
+  .layout-card h3{margin:0 0 .35rem;font-size:1rem;color:var(--accent)}
+  .layout-card p{margin:0}
+  .layout-card .best{font-family:ui-monospace,Consolas,monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-top:.5rem}
+  @media(max-width:42rem){.layout-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<p class="eyebrow">Lesson 03 · GitHub platform · projects</p>
+<h1>Projects</h1>
+<p class="subtitle">A project is a living view of your issues and PRs — a spreadsheet, a kanban board, and a roadmap, all reading from the same data. One project, many lenses.</p>
+
+<p>You already know the <em>units of work</em>: <a href="0001-issues.html">issues</a> describe what to do, PRs deliver the change, commits close them. A <strong>project</strong> is the <em>organiser</em> — it pulls those items together so you can see where everything stands, who's doing what, and what's blocked. It does not replace issues; it arranges them.</p>
+
+<h2>Where a project lives</h2>
+
+<p>Projects are <strong>not</strong> repo-scoped — this surprises most people. They live on your <em>user profile</em> or your <em>organisation</em>, and a single project can pull in issues and PRs from many repos. You find yours at <code>github.com/users/YOUR-USERNAME/projects</code> (or in the Projects tab on your profile page).</p>
+
+<div class="note">
+  <span class="label">Why this matters</span>
+  Because a project isn't trapped inside one repo, it can track a goal that spans several repos — a website, an API, a docs repo — in one board. Knowing this early prevents the common mistake of creating one project per repo and then fighting to see the big picture.
+</div>
+
+<h2>Anatomy of a project</h2>
+
+<div class="anatomy">
+  <div class="anatomy-row"><span class="k">Items</span><div>The rows. An item is an issue, a pull request, or a <strong>draft issue</strong> (a quick note that hasn't become a real issue yet — no repo, no labels, just text). Draft issues are project-only until you convert them.</div></div>
+  <div class="anatomy-row"><span class="k">Fields</span><div>The columns. Every item carries built-in fields (title, assignees, labels, milestone, repository) and any <strong>custom fields</strong> you add — text, number, date, single-select, iteration. Custom field data lives on the <em>project</em>, not on the issue — this is a key difference from labels.</div></div>
+  <div class="anatomy-row"><span class="k">Views</span><div>Saved configurations — a particular layout + filter + sort + grouping. Like browser tabs: each is independent, looking at the same data differently.</div></div>
+  <div class="anatomy-row"><span class="k">Workflows</span><div>Built-in automations. Common ones: "when an issue is added → set Status to Todo", "when an item is closed → set Status to Done". Found in project Settings → Workflows.</div></div>
+</div>
+
+<h2>Custom fields worth knowing</h2>
+
+<table>
+  <tr><th>Type</th><th>What it is</th><th>Use case</th></tr>
+  <tr><td><code>Single select</code></td><td>Pick one option from a defined list</td><td>Status (Todo / In Progress / Done), Priority (High / Medium / Low)</td></tr>
+  <tr><td><code>Text</code></td><td>Free-form string</td><td>Notes, links, context</td></tr>
+  <tr><td><code>Number</code></td><td>Numeric value</td><td>Story points, estimates</td></tr>
+  <tr><td><code>Date</code></td><td>Calendar date</td><td>Due date, ship date (needed for Roadmap view)</td></tr>
+  <tr><td><code>Iteration</code></td><td>Repeating time blocks</td><td>Sprint planning — define two-week cycles, assign items to sprints</td></tr>
+</table>
+
+<div class="note">
+  <span class="label">Field data lives on the project, not the issue</span>
+  If you add a "Priority" single-select to a project and mark an issue as "High", that priority value is only visible <em>inside the project</em>. On the issue page itself, there is no trace of it. Labels are the issue-side equivalent — visible everywhere. Keep this distinction in mind when choosing where to put metadata.
+</div>
+
+<h2>Three layouts, one dataset</h2>
+
+<p>Each view picks one of three layouts. You can have as many views as you want — a board for status tracking, a table for data entry, a roadmap for deadlines — all showing the same items.</p>
+
+<div class="layout-grid">
+  <div class="layout-card">
+    <h3>Table</h3>
+    <p>Spreadsheet grid. Items are rows, fields are columns. Sort, filter, group, bulk-edit — the densest view of your data.</p>
+    <p class="best">Best for: seeing everything, editing in bulk</p>
+  </div>
+  <div class="layout-card">
+    <h3>Board</h3>
+    <p>Kanban columns. You pick which single-select field defines the columns (usually Status). <strong>Dragging a card between columns changes the field value</strong> — the board isn't just a display, it's an editor.</p>
+    <p class="best">Best for: visualising workflow, daily standups</p>
+  </div>
+  <div class="layout-card">
+    <h3>Roadmap</h3>
+    <p>Timeline / Gantt chart. Requires a date or iteration field. Items are plotted against time — zoom from weeks to quarters.</p>
+    <p class="best">Best for: deadlines, release planning</p>
+  </div>
+</div>
+
+<h2>Adding items to a project</h2>
+
+<p>Multiple ways, all good:</p>
+<ul>
+  <li><strong>Paste a URL</strong> — copy an issue or PR URL into the bottom row of a table view</li>
+  <li><strong>Type <code>#</code></strong> — triggers search across all repos you have access to; pick from results</li>
+  <li><strong>Type plain text</strong> — creates a draft issue (project-only, no repo yet)</li>
+  <li><strong>Bulk add</strong> — from an issue list: select issues, <code>Add to project</code></li>
+  <li><strong><code>gh</code> CLI / API</strong> — scriptable for automation</li>
+  <li><strong>Workflows</strong> — e.g. "auto-add every new issue in repo X"</li>
+</ul>
+
+<h2>Putting it together: the mental model</h2>
+
+<p>Think of it in layers:</p>
+<ol>
+  <li><strong>Issues & PRs</strong> are the source of truth — they live in repos, carry labels and milestones, get closed by commits.</li>
+  <li><strong>A project</strong> reads from those items and adds a <em>planning layer</em> on top — custom fields, views, automations — without changing the issues themselves.</li>
+  <li><strong>Views</strong> are just saved filters on that planning layer. Change the view, not the data.</li>
+</ol>
+
+<div class="win">
+  <span class="label">Your win — build a real project board</span>
+  <ol>
+    <li>Go to <a href="https://github.com/stianbranden/learning">this repo on GitHub</a> → your profile → <strong>Projects</strong> tab → <strong>New project</strong>.</li>
+    <li>Pick "Board" template (or blank + switch to Board layout).</li>
+    <li>Add 2–3 existing issues from the <code>learning</code> repo (type <code>#</code> to search).</li>
+    <li>Add a custom <strong>single-select</strong> field called "Priority" with options: 🔥 High, Medium, Low.</li>
+    <li>Set a priority on each item.</li>
+    <li>Drag one item from "Todo" to "In Progress" — notice the Status field changes.</li>
+    <li>Create a second view as a <strong>Table</strong> — now you have two lenses on the same data.</li>
+  </ol>
+  That's a real, functioning project board. You can keep using it to track your learning.
+</div>
+
+<div class="quiz" data-quiz='[
+  {"q":"A GitHub Project lives at the repo level, like Issues do. True or false?","a":["true, each project belongs to exactly one repo","false, projects live on a user or org and can span multiple repos","true, but only for organisation-owned repos","false, projects live inside a GitHub App, not a repo or user"],"correct":1,"why":"Projects live at the user or organisation level. A single project can pull in issues and PRs from many repositories."},
+  {"q":"You add a custom single-select field called Priority to a project and set an issue to High. Where is that Priority value visible?","a":["on the issue page in the repo sidebar","only inside the project views","in the issue page and the project views","in the git log for commits linked to that issue"],"correct":1,"why":"Custom field data lives on the project, not on the issue. Labels are the issue-side equivalent. The Priority field is only visible within the project."},
+  {"q":"In a Board view, you drag a card from the Todo column to the In Progress column. What actually changed?","a":["nothing, the board is just a visual arrangement","the underlying single-select field value on that item changed","the issue was reassigned to a different person","a new commit was created to record the status change"],"correct":1,"why":"Dragging between board columns edits the field that defines the columns (usually Status). The board is an editor, not just a display."},
+  {"q":"You want to see your project items on a timeline with start and end dates. Which layout do you need?","a":["table layout, sorted by date column","board layout, grouped by date field","roadmap layout, with date or iteration fields configured","any layout, timelines appear automatically when dates exist"],"correct":2,"why":"The Roadmap layout plots items against time. It requires a date or iteration field to be configured for the start and end positions."}
+]'></div>
+
+<h2>Go deeper</h2>
+<p><strong>Primary source — read this one:</strong> <a href="https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/quickstart-for-projects">GitHub Docs — Quickstart for Projects</a>. Walks through creating a project, adding items, custom fields, and views step by step.</p>
+<p><strong>Reference on layouts:</strong> <a href="https://docs.github.com/en/issues/planning-and-tracking-with-projects/customizing-views-in-your-project/changing-the-layout-of-a-view">GitHub Docs — Changing the layout of a view</a>. Covers table, board, and roadmap configuration details.</p>
+<p><strong>Deeper on the data model:</strong> <a href="https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects">GitHub Docs — About Projects</a>. The full feature overview.</p>
+
+<div class="footer">
+  <p><strong>Previous:</strong> <a href="0002-actions-basics.html">Lesson 02 — Actions Basics</a> · <strong>Index:</strong> <a href="../index.html">all lessons</a></p>
+  <p class="no-print"><strong>Anything fuzzy?</strong> Ask your teacher — the agent in this workspace.</p>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
