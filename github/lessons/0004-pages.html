@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 4 — Pages</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .anatomy{margin:1.5rem 0;border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+  .anatomy-row{display:flex;align-items:flex-start;gap:.8rem;padding:.75rem 1rem;border-bottom:1px solid var(--rule);font-size:.92rem}
+  .anatomy-row:last-child{border-bottom:none}
+  .anatomy-row .k{font-family:ui-monospace,Consolas,monospace;font-weight:600;color:var(--accent);flex:none;width:9rem}
+  .vs-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
+  .vs-card{border:1px solid var(--rule);border-radius:6px;padding:1rem 1.1rem;font-size:.88rem}
+  .vs-card h3{margin:0 0 .35rem;font-size:1rem;color:var(--accent)}
+  .vs-card p{margin:0}
+  .vs-card .when{font-family:ui-monospace,Consolas,monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-top:.5rem}
+  @media(max-width:42rem){.vs-grid{grid-template-columns:1fr}}
+  .url-example{font-family:ui-monospace,Consolas,monospace;font-size:.85rem;background:var(--code-bg);padding:.6rem 1rem;border-radius:4px;margin:.5rem 0;display:block}
+</style>
+</head>
+<body>
+
+<p class="eyebrow">Lesson 04 · GitHub platform · pages</p>
+<h1>Pages</h1>
+<p class="subtitle">Free static-site hosting baked into every repo. Push HTML, get a live URL — no server, no deploy script, no hosting bill.</p>
+
+<p>You've tracked work with <a href="0001-issues.html">issues</a>, automated checks with <a href="0002-actions-basics.html">Actions</a>, and organised it all with <a href="0003-projects.html">Projects</a>. Now the output: <strong>GitHub Pages</strong> takes static files (HTML, CSS, JS) from a repo and publishes them as a real website. No server-side code runs — it's just your files, served globally, for free.</p>
+
+<h2>Two kinds of site</h2>
+
+<table>
+  <tr><th>Type</th><th>Repo name</th><th>URL</th><th>Limit</th></tr>
+  <tr>
+    <td><strong>User / org site</strong></td>
+    <td><code>&lt;username&gt;.github.io</code></td>
+    <td><code>https://&lt;username&gt;.github.io</code></td>
+    <td>One per account</td>
+  </tr>
+  <tr>
+    <td><strong>Project site</strong></td>
+    <td>Any repo name</td>
+    <td><code>https://&lt;username&gt;.github.io/&lt;repo&gt;</code></td>
+    <td>Unlimited</td>
+  </tr>
+</table>
+
+<p>For this repo, if you enable Pages, the URL would be:</p>
+<span class="url-example">https://stianbranden.github.io/learning</span>
+<p>That's a project site — the repo name becomes the path. The <code>index.html</code> already in this repo would become the homepage.</p>
+
+<h2>Two publishing sources</h2>
+
+<p>Every Pages site has a <em>source</em> — where GitHub looks for the files to publish. There are exactly two options:</p>
+
+<div class="vs-grid">
+  <div class="vs-card">
+    <h3>Deploy from a branch</h3>
+    <p>Pick a branch (<code>main</code>, <code>gh-pages</code>, any) and a folder (<code>/</code> root or <code>/docs</code>). Every push to that branch rebuilds the site from those files — no build step, just serve what's there.</p>
+    <p class="when">Use when: plain HTML/CSS/JS, no build needed</p>
+  </div>
+  <div class="vs-card">
+    <h3>GitHub Actions</h3>
+    <p>A workflow builds the site (using any tool — Vite, Hugo, Jekyll, anything) then deploys the output with <code>actions/deploy-pages</code>. More setup, total control.</p>
+    <p class="when">Use when: site needs a build step (framework, generator)</p>
+  </div>
+</div>
+
+<p>For plain HTML like this learning workspace, <strong>deploy from a branch</strong> is the right choice — zero config, just push and it's live.</p>
+
+<h2>Setting it up (branch deploy)</h2>
+
+<p>The entire setup is four clicks:</p>
+<ol>
+  <li>Go to your repo on GitHub → <strong>Settings</strong> (top nav).</li>
+  <li>In the left sidebar, click <strong>Pages</strong>.</li>
+  <li>Under "Build and deployment" → Source, select <strong>Deploy from a branch</strong>.</li>
+  <li>Choose the branch (<code>main</code>) and folder (<code>/ (root)</code>). Click <strong>Save</strong>.</li>
+</ol>
+
+<p>Within a few minutes, your site is live. A green banner in the Pages settings shows the URL.</p>
+
+<div class="note">
+  <span class="label">The /docs folder option</span>
+  If you don't want your site files cluttering the repo root, put them in a <code>/docs</code> folder and select that as the source. This is common for project documentation that lives alongside source code. It only works with branch deploy — Actions workflows build from wherever your workflow tells them to.
+</div>
+
+<h2>What Pages is not</h2>
+
+<p>Mental guardrails worth having early:</p>
+<ul>
+  <li><strong>No server-side code.</strong> No PHP, no Python, no Node.js backend. If it doesn't run in a browser, Pages won't run it.</li>
+  <li><strong>Private repo ≠ private site.</strong> On GitHub Free, a Pages site is <em>always publicly accessible</em>, even if the repo is private. Don't put sensitive data in a Pages site.</li>
+  <li><strong>Not for commercial web apps.</strong> It's a static hosting service with a soft bandwidth cap (~100 GB/month) and a 1 GB size limit. Documentation, course notes, portfolios — yes. Production SaaS — no.</li>
+</ul>
+
+<div class="note">
+  <span class="label">Jekyll — the built-in option you can ignore</span>
+  Pages has a built-in static site generator called <a href="https://jekyllrb.com/">Jekyll</a>. If your repo contains Markdown files and no <code>index.html</code>, Pages will try to process them through Jekyll automatically. For this workspace we already have HTML files, so Jekyll does nothing — it passes them through untouched. Worth knowing it exists, not worth learning right now.
+</div>
+
+<h2>How this connects</h2>
+
+<p>Pages closes a loop with what you already know:</p>
+<ul>
+  <li><strong>Issues</strong> track what to build → <strong>PRs</strong> deliver the change → <strong>Actions</strong> check it → <strong>Pages</strong> publishes it.</li>
+  <li>An Actions workflow can <em>be</em> the publishing source — so CI and deploy are the same pipeline.</li>
+  <li>A <strong>Project board</strong> can track which pages/features are done and which aren't.</li>
+</ul>
+
+<p>For this repo specifically: the course you're reading right now — these HTML lesson files — could be a live website in under a minute by enabling Pages on <code>main</code>.</p>
+
+<div class="win">
+  <span class="label">Your win — publish this repo as a live site</span>
+  <ol>
+    <li>Go to <a href="https://github.com/stianbranden/learning/settings/pages">Settings → Pages</a> on this repo.</li>
+    <li>Set Source to <strong>Deploy from a branch</strong>, branch <code>main</code>, folder <code>/ (root)</code>. Save.</li>
+    <li>Wait 1–2 minutes, then visit <code>https://stianbranden.github.io/learning</code>.</li>
+    <li>You should see the root <code>index.html</code> — the course index — live on the internet.</li>
+    <li>Click through to a lesson and confirm it works.</li>
+  </ol>
+  That's it. Every future push to <code>main</code> auto-updates the site. Your learning workspace is now a published website.
+</div>
+
+<div class="quiz" data-quiz='[
+  {"q":"Your repo is named \"learning\" and your GitHub username is \"alice\". If you enable Pages, what is the site URL?","a":["https://alice.github.io","https://alice.github.io/learning","https://learning.github.io/alice","https://github.com/alice/learning/pages"],"correct":1,"why":"A project site (any repo not named <username>.github.io) is published at https://<username>.github.io/<repo-name>."},
+  {"q":"You have a private repo on GitHub Free with Pages enabled. Who can see the published site?","a":["only you, since the repo is private","anyone with the URL, the site is always public on Free","only collaborators with repo access","nobody, Pages requires a public repo to work at all"],"correct":1,"why":"On GitHub Free, Pages sites are always publicly accessible regardless of repo visibility. Private repo does not mean private site."},
+  {"q":"Your repo has both an index.html and several .md files. You enable Pages with deploy-from-branch. What gets served?","a":["only the Markdown files, processed through Jekyll","only the index.html, Markdown is ignored entirely","the index.html as the homepage, Jekyll processes the .md files too","an error, you cannot mix HTML and Markdown in Pages"],"correct":2,"why":"Jekyll processes Markdown files into HTML and passes existing HTML files through untouched. The index.html becomes the homepage; .md files are also built and accessible at their corresponding paths."},
+  {"q":"You want Pages to run a Vite build before deploying. Which publishing source do you need?","a":["deploy from a branch, with /docs as the folder","deploy from a branch, with /dist as the folder","GitHub Actions, with a workflow that builds and deploys","any source, Pages auto-detects build tools"],"correct":2,"why":"Deploy-from-branch serves files as-is with no build step. To run a build tool like Vite, you need a GitHub Actions workflow that builds the site and deploys the output using actions/deploy-pages."}
+]'></div>
+
+<h2>Go deeper</h2>
+<p><strong>Primary source — read this one:</strong> <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages">GitHub Docs — About GitHub Pages</a>. Covers site types, limits, Jekyll, and custom domains.</p>
+<p><strong>Then configure it:</strong> <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site">GitHub Docs — Configuring a publishing source</a>. Step-by-step for both branch deploy and Actions deploy.</p>
+
+<div class="footer">
+  <p><strong>Previous:</strong> <a href="0003-projects.html">Lesson 03 — Projects</a> · <strong>Index:</strong> <a href="../index.html">all lessons</a></p>
+  <p class="no-print"><strong>Anything fuzzy?</strong> Ask your teacher — the agent in this workspace.</p>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
