@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lists, Dicts & Tuples</title>
+    <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+    <p class="eyebrow">Lesson 02 &middot; foundations</p>
+    <h1>Lists, Dicts &amp; Tuples</h1>
+    <p class="subtitle">The core structures that pandas DataFrames are built on underneath.</p>
+
+    <p>Before diving into pandas, you need to understand how Python natively holds collections of data. Underneath all the complex DataFrame operations, you'll find these three foundational structures: <strong>lists</strong>, <strong>dictionaries</strong>, and <strong>tuples</strong>.</p>
+
+    <h2>1. Lists: Ordered &amp; Mutable</h2>
+    <p>Lists are ordered collections. They are 0-indexed, mutable (can be changed in place), and allow duplicate elements.</p>
+    
+    <pre><code># Creating a list of closing prices
+prices = [100.5, 102.3, 98.7, 105.0]
+
+# Indexing (0-based)
+first = prices[0]    # 100.5
+last = prices[-1]    # 105.0
+
+# Slicing: [start:stop] (stop is exclusive)
+mid = prices[1:3]    # [102.3, 98.7]
+early = prices[:2]   # [100.5, 102.3]
+late = prices[2:]    # [98.7, 105.0]
+
+# Mutating
+prices.append(107.2) # Adds to the end
+prices[0] = 99.8     # Modifies the first element
+</code></pre>
+
+    <p>Other common operations include <code>len(prices)</code> to get the count, <code>prices.pop()</code> to remove the last item, <code>prices.sort()</code>, and <code>prices.reverse()</code>.</p>
+
+    <p><strong>List Comprehensions</strong> are a concise way to create lists. This pattern is critical for data work:</p>
+    <pre><code># Apply a 10% return to all prices
+inflated = [p * 1.1 for p in prices]</code></pre>
+
+    <div class="note">
+        <span class="label">Note</span>
+        A pandas <strong>Series</strong> (a single column of data) is essentially a highly-optimized, labeled list.
+    </div>
+
+    <h2>2. Dictionaries: Key-Value Pairs</h2>
+    <p>Dictionaries (dicts) map keys to values. They are fast, mutable, and maintain insertion order (since Python 3.7).</p>
+
+    <pre><code># Creating a dict
+stock = {
+    "ticker": "AAPL", 
+    "price": 150.25, 
+    "volume": 1_200_000
+}
+
+# Accessing values
+px = stock["price"]            # 150.25
+div = stock.get("dividend", 0) # 0 (safe access with default)
+
+# Adding or updating
+stock["sector"] = "Technology"
+stock["price"] = 152.10
+
+# Iterating
+for key, val in stock.items():
+    print(f"{key}: {val}")
+    # also .keys(), .values()
+</code></pre>
+
+    <p>You can also use <strong>Dict Comprehensions</strong>:</p>
+    <pre><code>prices_dict = {"AAPL": 150, "MSFT": 310}
+inflated_dict = {k: v * 1.1 for k, v in prices_dict.items()}
+</code></pre>
+
+    <div class="note">
+        <span class="label">Note</span>
+        Think of a pandas <strong>DataFrame</strong> as a dictionary where keys are column names, and values are lists of data. A single DataFrame row being extracted often looks exactly like a dict.
+    </div>
+
+    <h2>3. Tuples: Immutable Sequences</h2>
+    <p>Tuples are ordered collections just like lists, but they are <strong>immutable</strong>—they cannot be changed after creation.</p>
+
+    <pre><code># Creating a tuple (parentheses are optional but common)
+point = (3, 5)
+trade = "BUY", "AAPL", 150.25
+
+# Unpacking
+action, ticker, price = trade
+</code></pre>
+
+    <p>Why use tuples? Because they are immutable, they are safer for fixed data, they can be used as dictionary keys (unlike lists), and they are standard for returning multiple values from a function.</p>
+
+    <div class="note">
+        <span class="label">Note</span>
+        When you iterate over DataFrame rows using <code>.iterrows()</code>, pandas returns each row as a tuple of <code>(index, Series)</code>. DataFrame index entries themselves are also built on tuples.
+    </div>
+
+    <h2>Comparison</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Structure</th>
+                <th>Syntax</th>
+                <th>Ordered?</th>
+                <th>Mutable?</th>
+                <th>When to use?</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>List</td>
+                <td><code>[1, 2]</code></td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Homogeneous data, sequential processing.</td>
+            </tr>
+            <tr>
+                <td>Dict</td>
+                <td><code>{"a": 1}</code></td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Lookups, labeled data, representing rows.</td>
+            </tr>
+            <tr>
+                <td>Tuple</td>
+                <td><code>(1, 2)</code></td>
+                <td>Yes</td>
+                <td>No</td>
+                <td>Fixed records, dict keys, function returns.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="quiz" data-title="Retrieval practice — answer before scrolling back" data-quiz='[
+        {
+            "q": "How do you extract the last element of a list named `prices` without knowing its length?",
+            "a": ["prices[-1]", "prices.end", "prices.lst"],
+            "correct": 0,
+            "why": "Python supports negative indexing. -1 refers to the last element, -2 to the second to last, etc."
+        },
+        {
+            "q": "Which syntax is used to safely retrieve a value from a dictionary that might not exist?",
+            "a": ["data.get(\"key\")", "data.fnd(\"key\")", "data.has(\"key\")"],
+            "correct": 0,
+            "why": "Using brackets `data[\"key\"]` throws a KeyError if the key is missing. `.get()` returns None (or a default) instead."
+        },
+        {
+            "q": "What happens if you try to reassign an element in a tuple, like `my_tuple[0] = 5`?",
+            "a": ["Throws an error", "Sets new value", "Makes data copy"],
+            "correct": 0,
+            "why": "Tuples are immutable. Once created, their contents cannot be modified, which makes them safer for fixed data."
+        },
+        {
+            "q": "What does the slice `prices[1:3]` return?",
+            "a": ["Items at 1, 2", "Items at 1, 3", "Items at 0, 2"],
+            "correct": 0,
+            "why": "Slicing is inclusive of the start index but exclusive of the stop index. So it returns index 1 and 2."
+        },
+        {
+            "q": "Which data structure is typically used to represent a single, structured record (like a JSON object)?",
+            "a": ["A dictionary map", "A python list []", "A python tuple ()"],
+            "correct": 0,
+            "why": "Dictionaries use key-value pairs, making them ideal for structured records with labeled fields."
+        }
+    ]'></div>
+
+    <h2>Do this now</h2>
+    <p>Open your editor and build a simple portfolio tracker to combine these structures.</p>
+    <ol>
+        <li>Create a list of dictionaries. Each dictionary should represent a holding with keys: <code>"ticker"</code>, <code>"shares"</code>, and <code>"price"</code>.</li>
+        <li>Use a <strong>list comprehension</strong> to calculate the total value of each holding (shares &times; price).</li>
+        <li>Use the built-in <code>sum()</code> function on that new list to find the total portfolio value.</li>
+        <li>Print the result.</li>
+    </ol>
+
+    <details class="reveal">
+        <summary>Stuck? View a solution</summary>
+        <pre><code>portfolio = [
+    {"ticker": "AAPL", "shares": 10, "price": 150.0},
+    {"ticker": "MSFT", "shares": 5, "price": 310.0},
+    {"ticker": "GOOG", "shares": 2, "price": 2800.0}
+]
+
+# List comprehension extracting the value of each holding
+values = [h["shares"] * h["price"] for h in portfolio]
+
+total_value = sum(values)
+print(f"Total Portfolio Value: ${total_value:,.2f}")
+</code></pre>
+    </details>
+
+    <div class="win">
+        <span class="label">Win</span>
+        You now understand lists, dicts, and tuples—the structural glue of Python. When you start pulling in raw data, it usually lands in these formats before pandas even touches it!
+    </div>
+
+    <h2>Go deeper</h2>
+    <ul>
+        <li><a href="https://docs.python.org/3/tutorial/datastructures.html" target="_blank">Python Official Docs: Data Structures</a></li>
+    </ul>
+
+    <div class="footer">
+      <p><strong>Primary source — read this one:</strong> <a href="https://docs.python.org/3/tutorial/datastructures.html">The Python Tutorial §5, "Data Structures"</a>. Covers lists, dicts, tuples, and comprehensions in authoritative detail this lesson compressed.</p>
+      <p><strong>Reference:</strong> <a href="../reference/python-glossary.html">Python Glossary</a> — terms introduced here: list, dict, tuple, indexing, slicing, list comprehension, unpacking, mutable vs immutable.</p>
+      <p><strong>Previous:</strong> <a href="0001-python-syntax-fast.html">Lesson 1 — Python Syntax, Fast</a></p>
+      <p><strong>Next up:</strong> strings, slicing, and file I/O — reading real data from disk.</p>
+      <p class="no-print"><strong>Stuck on anything?</strong> Ask your teacher — that's the agent in this workspace. Paste the exact error if something didn't run as described.</p>
+    </div>
+
+    <script src="../assets/quiz.js"></script>
+</body>
+</html>

@@ -43,5 +43,32 @@
   <dd>A string literal prefixed <code>f</code>, e.g. <code>f"{name} is {age}"</code> — expressions inside <code>{ }</code> are evaluated and interpolated inline. The standard way to build strings with embedded values.</dd>
 </dl>
 
+<h2>Data Structures</h2>
+<dl>
+  <dt>list</dt>
+  <dd>Ordered, mutable sequence. Created with square brackets: <code>[1, 2, 3]</code>. Zero-indexed. The most common container — pandas Series is essentially a labeled list.</dd>
+
+  <dt>dict (dictionary)</dt>
+  <dd>Key-value mapping. Created with braces: <code>{"key": value}</code>. Keys must be hashable (strings, numbers, tuples). Insertion-ordered since Python 3.7. A DataFrame row is conceptually a dict.</dd>
+
+  <dt>tuple</dt>
+  <dd>Immutable sequence. Created with parentheses (or just commas): <code>(1, 2)</code> or <code>1, 2</code>. Can't be changed after creation. Used for dict keys, function return values, and DataFrame index entries.</dd>
+
+  <dt>indexing</dt>
+  <dd>Accessing an element by position: <code>items[0]</code> (first), <code>items[-1]</code> (last). Works on lists, tuples, and strings. Zero-based.</dd>
+
+  <dt>slicing</dt>
+  <dd>Extracting a sub-sequence: <code>items[start:stop]</code>. The stop index is excluded. Omit start or stop to go from the beginning or to the end.</dd>
+
+  <dt>list comprehension</dt>
+  <dd>One-line syntax to build a new list by transforming another: <code>[expr for x in iterable]</code>. Optionally filtered: <code>[expr for x in iterable if cond]</code>. The idiomatic Python replacement for map/filter patterns.</dd>
+
+  <dt>unpacking</dt>
+  <dd>Binding multiple names in one statement by matching a sequence's shape: <code>x, y = (3, 5)</code>. Works with any iterable of the right length.</dd>
+
+  <dt>mutable vs immutable</dt>
+  <dd>Lists and dicts can be changed in place (mutable). Tuples and strings cannot (immutable). Matters for: dict keys (must be immutable) and shared references.</dd>
+</dl>
+
 </body>
 </html>
