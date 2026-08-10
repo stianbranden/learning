@@ -21,6 +21,7 @@ lessons use it directly wherever possible instead of a throwaway sandbox.
 - Publish a GitHub Pages site from a repo
 - Know what the Security tab offers (Dependabot alerts, secret scanning) at a "what is this for" level
 - Navigate a repo's Insights (contributors, traffic) and know what they're for
+- Cut a release (tag + notes) and know when a release is warranted vs. just merging to main
 
 ## Constraints
 

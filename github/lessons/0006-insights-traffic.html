@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 6 — Insights &amp; Traffic</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+  .anatomy{margin:1.5rem 0;border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+  .anatomy-row{display:flex;align-items:flex-start;gap:.8rem;padding:.75rem 1rem;border-bottom:1px solid var(--rule);font-size:.92rem}
+  .anatomy-row:last-child{border-bottom:none}
+  .anatomy-row .k{font-family:ui-monospace,Consolas,monospace;font-weight:600;color:var(--accent);flex:none;width:9.5rem}
+</style>
+</head>
+<body>
+
+<p class="eyebrow">Lesson 06 · GitHub platform · insights</p>
+<h1>Insights &amp; Traffic</h1>
+<p class="subtitle">The Insights tab turns repo activity into charts — who's contributing, what's changing, and (for a public repo) who's actually visiting.</p>
+
+<p>Every repo tab you've used so far — <a href="0001-issues.html">Issues</a>, <a href="0002-actions-basics.html">Actions</a>, <a href="0003-projects.html">Projects</a>, <a href="0005-security.html">Security</a> — is where work happens. <strong>Insights</strong> is different: it's read-only, no actions to take, just charts answering "what's been going on in this repo."</p>
+
+<h2>The Insights sub-pages</h2>
+
+<div class="anatomy">
+  <div class="anatomy-row"><span class="k">Pulse</span> A weekly/monthly digest: commits, merged PRs, opened/closed issues, active contributors. The "what happened recently" summary.</div>
+  <div class="anatomy-row"><span class="k">Contributors</span> Commit count per person, over time, as a graph. Who's actually pushing code, and when activity picked up or dropped.</div>
+  <div class="anatomy-row"><span class="k">Commits / Code frequency</span> Commit volume and lines added/deleted, plotted over the repo's whole history. Spot when a big refactor happened.</div>
+  <div class="anatomy-row"><span class="k">Network</span> A visual branch graph across <em>all forks</em> of the repo, not just yours — see how forks diverged and where they'd merge back.</div>
+  <div class="anatomy-row"><span class="k">Traffic</span> Views and clones, last 14 days. The only chart with visitors who never touched the code.</div>
+</div>
+
+<h2>Traffic is the odd one out</h2>
+
+<p>Pulse, Contributors, Commits, Network — all derived from git history, which is public on a public repo regardless of who's watching. <strong>Traffic</strong> is different: it counts people who <em>looked</em>, not people who <em>committed</em>.</p>
+
+<table>
+  <tr><th>Metric</th><th>Counts</th><th>Window</th></tr>
+  <tr><td><strong>Views</strong></td><td>Page loads of any page in the repo (code, issues, PRs, etc.)</td><td>Last 14 days, daily</td></tr>
+  <tr><td><strong>Unique visitors</strong></td><td>Distinct people behind those views</td><td>Last 14 days, daily</td></tr>
+  <tr><td><strong>Clones</strong></td><td><code>git clone</code> / <code>git fetch</code> operations</td><td>Last 14 days, daily</td></tr>
+  <tr><td><strong>Referring sites</strong></td><td>Where view traffic came from (Google, a tweet, another site)</td><td>Top 10, rolling</td></tr>
+</table>
+
+<div class="note">
+  <span class="label">Two catches worth knowing before you rely on it</span>
+  Traffic data only covers the <strong>last 14 days</strong> — nothing older is retained, so it's for spotting recent trends, not a historical record. And it's <strong>visible only to people with push access</strong> to the repo, even on a public repo — visitors can't see their own view counted back at them, and you can't see traffic on a repo you don't have write access to.
+</div>
+
+<h2>What these are for</h2>
+
+<p>None of this is actionable the way an Issue or a failing Action is — there's no button to click in response to a chart. It's context: <strong>Contributors</strong> tells you if a project is a one-person effort or has real team velocity. <strong>Traffic</strong> tells you if anyone's actually finding your Pages site or README, which matters if you're writing documentation or an OSS project hoping for outside contributors. For this workspace specifically, Traffic is the only signal for whether the <a href="0004-pages.html">Pages site</a> you published in lesson 4 gets visited by anyone but you.</p>
+
+<div class="win">
+  <span class="label">Your win — read this repo's own signals</span>
+  <ol>
+    <li>Go to <a href="https://github.com/stianbranden/learning/pulse">the Pulse tab</a> on this repo — read the summary of recent activity.</li>
+    <li>Open <a href="https://github.com/stianbranden/learning/graphs/contributors">Contributors</a> — confirm the commit graph matches what you'd expect from your own history.</li>
+    <li>Open <a href="https://github.com/stianbranden/learning/graphs/traffic">Traffic</a> — check views and clones over the last 14 days. If the Pages site from lesson 4 is live, note whether views show up.</li>
+  </ol>
+  No fix needed here — the win is knowing these four sub-pages exist and what each one answers, so you reach for the right one instead of guessing.
+</div>
+
+<div class="quiz" data-quiz='[
+  {"q":"You want to know how many lines of code changed during a big refactor last year. Which Insights page shows that?","a":["Pulse","Code frequency","Traffic","Network"],"correct":1,"why":"Code frequency plots lines added/deleted over the repo full history, making a spike from a big refactor visible directly."},
+  {"q":"Which Insights metric is the only one that can include people who never wrote a line of code in the repo?","a":["Contributors","Commits","Traffic views","Network graph"],"correct":2,"why":"Traffic views count page loads by anyone visiting the repo, code contributor or not. The other three are all derived from git history, i.e. actual commits."},
+  {"q":"A public repo has 50 stars and lots of outside visitors. Can a random visitor see the repo's Traffic chart?","a":["yes, Traffic is public on any public repo","no, only people with push access can see it","yes, but only the last 7 days instead of 14","no, Traffic requires the repo to be private"],"correct":1,"why":"Traffic is visible only to collaborators with push access, regardless of the repo public/private status. A visitor with only read access cannot see it."},
+  {"q":"You want to know how far a fork's branch has diverged from the original repo, visually. Which page?","a":["Pulse","Network","Traffic","Contributors"],"correct":1,"why":"Network draws a branch graph across all forks, showing exactly where each fork diverged and whether it could merge back cleanly."}
+]'></div>
+
+<h2>Go deeper</h2>
+<p><strong>Primary source — read this one:</strong> <a href="https://docs.github.com/en/repositories/viewing-activity-and-data-for-your-repository/viewing-traffic-to-a-repository">GitHub Docs — Viewing traffic to a repository</a>. Covers views, clones, referring sites, and the 14-day / access-level caveats in full.</p>
+
+<div class="footer">
+  <p><strong>Previous:</strong> <a href="0005-security.html">Lesson 05 — Security</a> · <strong>Index:</strong> <a href="../index.html">all lessons</a></p>
+  <p class="no-print"><strong>Anything fuzzy?</strong> Ask your teacher — the agent in this workspace.</p>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

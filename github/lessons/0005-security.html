@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 5 — Security</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+  .anatomy{margin:1.5rem 0;border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+  .anatomy-row{display:flex;align-items:flex-start;gap:.8rem;padding:.75rem 1rem;border-bottom:1px solid var(--rule);font-size:.92rem}
+  .anatomy-row:last-child{border-bottom:none}
+  .anatomy-row .k{font-family:ui-monospace,Consolas,monospace;font-weight:600;color:var(--accent);flex:none;width:11rem}
+  .vs-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
+  .vs-card{border:1px solid var(--rule);border-radius:6px;padding:1rem 1.1rem;font-size:.88rem}
+  .vs-card h3{margin:0 0 .35rem;font-size:1rem;color:var(--accent)}
+  .vs-card p{margin:0}
+  .vs-card .when{font-family:ui-monospace,Consolas,monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-top:.5rem}
+  @media(max-width:42rem){.vs-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<p class="eyebrow">Lesson 05 · GitHub platform · security</p>
+<h1>Security</h1>
+<p class="subtitle">GitHub watches your dependencies and your diffs for you — for free, on every repo. Two jobs: catch vulnerable packages already in the repo, and stop secrets from ever landing in it.</p>
+
+<p>You've tracked work with <a href="0001-issues.html">issues</a>, automated checks with <a href="0002-actions-basics.html">Actions</a>, organised it with <a href="0003-projects.html">Projects</a>, and published it with <a href="0004-pages.html">Pages</a>. The last piece: the <strong>Security</strong> tab, which runs a small set of automated checks against the repo without you writing any workflow YAML for them.</p>
+
+<h2>Three tools, two jobs</h2>
+
+<div class="anatomy">
+  <div class="anatomy-row"><span class="k">Dependabot alerts</span> Scans your dependency manifests (<code>package.json</code>, <code>requirements.txt</code>, etc.) against a vulnerability database. Flags packages with known CVEs.</div>
+  <div class="anatomy-row"><span class="k">Dependabot security updates</span> When an alert fires, opens a PR that bumps the flagged package to a patched version. You review and merge like any other PR.</div>
+  <div class="anatomy-row"><span class="k">Secret scanning + push protection</span> Scans commits for known credential patterns (API keys, tokens). Push protection goes further — it <em>blocks the push</em> before a matching secret ever reaches the repo.</div>
+</div>
+
+<p>First two are one job: <strong>known-vulnerable dependencies</strong>. Alerts find them, security updates fix them. Third is a different job: <strong>leaked credentials</strong> — not a dependency problem, a "someone pasted an API key into code" problem.</p>
+
+<h2>Alerts vs. updates — don't confuse them</h2>
+
+<div class="vs-grid">
+  <div class="vs-card">
+    <h3>Dependabot alerts</h3>
+    <p>Passive. Just tells you: "this repo depends on <code>lodash@4.17.15</code>, which has a known prototype-pollution CVE." Shows up in the Security tab. No code changes.</p>
+    <p class="when">Always on, can't be disabled per-repo on GitHub Free for public repos</p>
+  </div>
+  <div class="vs-card">
+    <h3>Dependabot security updates</h3>
+    <p>Active. Opens an actual PR bumping the version, with the CVE explained in the PR description. You still review and merge it — nothing auto-merges.</p>
+    <p class="when">Opt-in, toggled separately in repo Settings → Code security</p>
+  </div>
+</div>
+
+<h2>Push protection — the one that runs before the fact</h2>
+
+<p>Secret scanning normally works like the others: after the fact, scan what's already in the repo, alert you. <strong>Push protection</strong> is different in kind — it runs at <code>git push</code> time. If a commit contains something matching a known secret pattern (an AWS key, a Stripe token, a GitHub PAT, dozens more), the push is rejected outright, with the offending line and file named in the error.</p>
+
+<div class="note">
+  <span class="label">Why this matters more than the others</span>
+  A leaked secret is often worse than a vulnerable dependency — it's an immediate, exploitable credential, not a theoretical CVE. And once a secret is pushed, it's in git history forever unless you rewrite it (see <a href="../../git/lessons/0003-the-undo-playbook.html">the undo playbook</a> — this is exactly the kind of mistake that lesson covers, but prevention beats cleanup). Push protection stops the secret from ever landing, which is strictly better than the best possible cleanup afterward.
+</div>
+
+<h2>What's not covered here</h2>
+
+<p>The Security tab also surfaces <strong>code scanning</strong> (CodeQL — static analysis that finds bugs like SQL injection or XSS in your own code, not just dependencies). It's real and useful, but setup and custom queries are deep enough to be their own lesson — this course covers it at awareness level only: it exists, it's in the same tab, revisit if a real need shows up.</p>
+
+<h2>How this connects</h2>
+
+<p>Security closes the loop differently than Pages did — it's not a new output, it's a backstop across everything else:</p>
+<ul>
+  <li>A Dependabot security update PR flows through the same review process as any PR from <a href="0001-issues.html">Issues</a>.</li>
+  <li>An <a href="0002-actions-basics.html">Actions</a> workflow can run tests against that PR before you merge it — same CI, no special case.</li>
+  <li>A <a href="0003-projects.html">Project board</a> can track open security PRs the same way it tracks any other work item.</li>
+</ul>
+
+<div class="win">
+  <span class="label">Your win — check the real repo's security posture</span>
+  <ol>
+    <li>Go to <a href="https://github.com/stianbranden/learning/security">the Security tab</a> on this repo.</li>
+    <li>Open <strong>Settings → Code security</strong> and confirm Dependabot alerts and secret scanning are enabled (public repos get these on by default).</li>
+    <li>Toggle on <strong>Dependabot security updates</strong> and <strong>push protection</strong> if either is off.</li>
+    <li>Back on the Security tab, check the alerts list — this workspace has no dependency manifests, so expect it empty. That itself is worth confirming, not assuming.</li>
+  </ol>
+  Nothing to fix today — the win is knowing where to look and having the backstop switched on before you ever need it.
+</div>
+
+<div class="quiz" data-quiz='[
+  {"q":"A Dependabot alert fires on a package in your repo. What happens next by default?","a":["the package is auto-updated immediately","nothing, until you enable security updates too","the push that introduced it is reverted","a code scanning run is triggered"],"correct":1,"why":"Alerts are passive — they only notify. Dependabot security updates is a separate, opt-in toggle that actually opens a fix PR."},
+  {"q":"You accidentally commit an AWS key and run git push. Push protection is enabled. What happens?","a":["the push succeeds, then an alert appears in Security","the push is rejected before the secret reaches the repo","the key is auto-redacted from the commit","nothing, push protection only scans pull requests"],"correct":1,"why":"Push protection runs at push time and rejects the push outright when a known secret pattern is found, so the secret never lands in repo history."},
+  {"q":"Which pair of tools both address the same underlying job — known-vulnerable dependencies?","a":["secret scanning and push protection","Dependabot alerts and Dependabot security updates","code scanning and secret scanning","Dependabot alerts and push protection"],"correct":1,"why":"Alerts detect known-vulnerable dependencies; security updates fix them with a PR. Secret scanning and code scanning address different problems (leaked credentials, bugs in your own code)."},
+  {"q":"What does GitHub code scanning (CodeQL) analyze that Dependabot does not?","a":["your own repo's source code for bugs like SQL injection","your dependency manifests for known CVEs","commit messages for leaked credentials","your Actions workflow YAML for syntax errors"],"correct":0,"why":"Dependabot looks at third-party dependencies. Code scanning runs static analysis over your own code to find bug classes like SQL injection or XSS."}
+]'></div>
+
+<h2>Go deeper</h2>
+<p><strong>Primary source — read this one:</strong> <a href="https://docs.github.com/en/code-security/getting-started/github-security-features">GitHub Docs — GitHub security features</a>. The full map: Dependabot, secret scanning, code scanning, and how they fit together.</p>
+<p><strong>Then configure it:</strong> <a href="https://docs.github.com/en/code-security/secret-scanning/introduction/about-secret-scanning">GitHub Docs — About secret scanning</a>. Covers push protection setup in detail.</p>
+
+<div class="footer">
+  <p><strong>Previous:</strong> <a href="0004-pages.html">Lesson 04 — Pages</a> · <strong>Index:</strong> <a href="../index.html">all lessons</a></p>
+  <p class="no-print"><strong>Anything fuzzy?</strong> Ask your teacher — the agent in this workspace.</p>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
