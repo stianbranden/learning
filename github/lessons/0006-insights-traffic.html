@@ -47,25 +47,32 @@
   Traffic data only covers the <strong>last 14 days</strong> — nothing older is retained, so it's for spotting recent trends, not a historical record. And it's <strong>visible only to people with push access</strong> to the repo, even on a public repo — visitors can't see their own view counted back at them, and you can't see traffic on a repo you don't have write access to.
 </div>
 
+<div class="note">
+  <span class="label">Third catch — plan, not permission</span>
+  On <strong>GitHub Free</strong>, six graphs — <strong>Pulse, Contributors, Traffic, Commits, Code frequency, Network</strong> — only render for <em>public</em> repos, full stop. Push access doesn't override it. Make the repo private on Free and those six tabs vanish from the sidebar entirely; what's left is <strong>Dependency graph, Forks</strong>, and (if Actions is enabled) <strong>Actions usage metrics</strong> and <strong>Actions performance metrics</strong>. This workspace's repo (<code>stianbranden/learning</code>) is private, so that's exactly what you'll see — it's the plan tier, not a bug or a missing permission. Pro/Team/Enterprise Cloud unlocks all six on private repos too. Source: <a href="https://docs.github.com/en/repositories/viewing-activity-and-data-for-your-repository/about-repository-graphs">GitHub Docs — About repository graphs</a>.
+</div>
+
 <h2>What these are for</h2>
 
 <p>None of this is actionable the way an Issue or a failing Action is — there's no button to click in response to a chart. It's context: <strong>Contributors</strong> tells you if a project is a one-person effort or has real team velocity. <strong>Traffic</strong> tells you if anyone's actually finding your Pages site or README, which matters if you're writing documentation or an OSS project hoping for outside contributors. For this workspace specifically, Traffic is the only signal for whether the <a href="0004-pages.html">Pages site</a> you published in lesson 4 gets visited by anyone but you.</p>
 
 <div class="win">
-  <span class="label">Your win — read this repo's own signals</span>
+  <span class="label">Your win — read this repo's own signals (private-repo edition)</span>
+  <p>Because <code>stianbranden/learning</code> is private on Free, Pulse/Contributors/Traffic aren't reachable here — use the sub-pages that <em>are</em> open:</p>
   <ol>
-    <li>Go to <a href="https://github.com/stianbranden/learning/pulse">the Pulse tab</a> on this repo — read the summary of recent activity.</li>
-    <li>Open <a href="https://github.com/stianbranden/learning/graphs/contributors">Contributors</a> — confirm the commit graph matches what you'd expect from your own history.</li>
-    <li>Open <a href="https://github.com/stianbranden/learning/graphs/traffic">Traffic</a> — check views and clones over the last 14 days. If the Pages site from lesson 4 is live, note whether views show up.</li>
+    <li>Open <a href="https://github.com/stianbranden/learning/network/dependencies">Dependency graph</a> — see what the repo depends on (or confirm it's empty, since this workspace has no build).</li>
+    <li>Open <a href="https://github.com/stianbranden/learning/forks">Forks</a> — confirm it's zero; this is a solo practice repo.</li>
+    <li>From the repo's <strong>Insights</strong> tab, click <strong>Actions usage metrics</strong> in the sidebar — see which workflows have run and how much compute they've used.</li>
   </ol>
-  No fix needed here — the win is knowing these four sub-pages exist and what each one answers, so you reach for the right one instead of guessing.
+  If you ever make this repo public (or upgrade the plan), Pulse/Contributors/Traffic/Commits/Code frequency/Network open up immediately — same repo, same history, just gated by that one setting.
 </div>
 
 <div class="quiz" data-quiz='[
   {"q":"You want to know how many lines of code changed during a big refactor last year. Which Insights page shows that?","a":["Pulse","Code frequency","Traffic","Network"],"correct":1,"why":"Code frequency plots lines added/deleted over the repo full history, making a spike from a big refactor visible directly."},
   {"q":"Which Insights metric is the only one that can include people who never wrote a line of code in the repo?","a":["Contributors","Commits","Traffic views","Network graph"],"correct":2,"why":"Traffic views count page loads by anyone visiting the repo, code contributor or not. The other three are all derived from git history, i.e. actual commits."},
   {"q":"A public repo has 50 stars and lots of outside visitors. Can a random visitor see the repo's Traffic chart?","a":["yes, Traffic is public on any public repo","no, only people with push access can see it","yes, but only the last 7 days instead of 14","no, Traffic requires the repo to be private"],"correct":1,"why":"Traffic is visible only to collaborators with push access, regardless of the repo public/private status. A visitor with only read access cannot see it."},
-  {"q":"You want to know how far a fork's branch has diverged from the original repo, visually. Which page?","a":["Pulse","Network","Traffic","Contributors"],"correct":1,"why":"Network draws a branch graph across all forks, showing exactly where each fork diverged and whether it could merge back cleanly."}
+  {"q":"You want to know how far a fork's branch has diverged from the original repo, visually. Which page?","a":["Pulse","Network","Traffic","Contributors"],"correct":1,"why":"Network draws a branch graph across all forks, showing exactly where each fork diverged and whether it could merge back cleanly."},
+  {"q":"A private repo on GitHub Free shows only Dependency graph, Forks, and Actions metrics under Insights. Why are Pulse, Contributors, Traffic, Commits, Code frequency, and Network missing?","a":["those graphs need an org owner","those six need a public repo","those six need admin rights","those graphs need ten stars"],"correct":1,"why":"On GitHub Free, Pulse, Contributors, Traffic, Commits, Code frequency, and Network render only for public repositories; a private repo hides all six regardless of your access level, until you go public or upgrade the plan."}
 ]'></div>
 
 <h2>Go deeper</h2>
