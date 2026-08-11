@@ -14,6 +14,8 @@
   Use for: publishing a static site from a repo.
 - [GitHub Docs — Security](https://docs.github.com/en/code-security)
   Use for: Dependabot, secret scanning, code scanning overview.
+- [GitHub Docs — Releases](https://docs.github.com/en/repositories/releasing-projects-on-github)
+  Use for: tags, release notes, draft/pre-release/latest, assets.
 
 ## Skills (interactive practice)
 

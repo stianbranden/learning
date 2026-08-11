@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 7 — Releases</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+  .anatomy{margin:1.5rem 0;border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+  .anatomy-row{display:flex;align-items:flex-start;gap:.8rem;padding:.75rem 1rem;border-bottom:1px solid var(--rule);font-size:.92rem}
+  .anatomy-row:last-child{border-bottom:none}
+  .anatomy-row .k{font-family:ui-monospace,Consolas,monospace;font-weight:600;color:var(--accent);flex:none;width:9.5rem}
+</style>
+</head>
+<body>
+
+<p class="eyebrow">Lesson 07 · GitHub platform · releases</p>
+<h1>Releases</h1>
+<p class="subtitle">A release wraps a single commit, a tag, and a changelog into a fixed point other people can pin to. Knowing when to cut one — and when a plain merge to main is enough — is the actual skill.</p>
+
+<p>Every lesson so far — <a href="0001-issues.html">Issues</a>, <a href="0002-actions-basics.html">Actions</a>, <a href="0003-projects.html">Projects</a>, <a href="0004-pages.html">Pages</a>, <a href="0005-security.html">Security</a>, <a href="0006-insights-traffic.html">Insights</a> — covered day-to-day repo mechanics. A release is different: it's the moment you say "this exact state of the code is a thing other people can depend on," out loud, in public.</p>
+
+<h2>What a release actually is</h2>
+
+<p>Under the hood a release is thin: it's a <strong>git tag</strong> — a pointer to one specific commit — dressed up with a title, notes, and optional files. "Releases are deployable software iterations you can package and make available for a wider audience to download and use." <a href="https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases">— GitHub Docs</a></p>
+
+<div class="anatomy">
+  <div class="anatomy-row"><span class="k">Tag</span> The pointer, e.g. <code>v0.1.0</code>. Pins the release to one exact commit forever. GitHub creates this for you when you publish a release from the web UI — you don't need <code>git tag</code> on the command line first.</div>
+  <div class="anatomy-row"><span class="k">Title</span> A short human name for the release. Often just the tag, sometimes a codename.</div>
+  <div class="anatomy-row"><span class="k">Release notes</span> What changed. Write by hand, or click <strong>Generate release notes</strong> to auto-draft from every PR merged since the last release.</div>
+  <div class="anatomy-row"><span class="k">Assets</span> Optional attached files — a built binary, a zip, a compiled artifact. Not just source code (GitHub always attaches that automatically).</div>
+  <div class="anatomy-row"><span class="k">Pre-release</span> A checkbox flag: "to notify users that the release is not ready for production and may be unstable." <a href="https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository">— GitHub Docs</a></div>
+  <div class="anatomy-row"><span class="k">Latest</span> A label shown on one release at a time. Leave it alone and GitHub assigns it "automatically based on semantic versioning" — or set it explicitly.</div>
+</div>
+
+<p>The tag itself is one thing you already half-know from git: a named pointer to a commit, like a branch that never moves. "A tag date may be different than a release date since they can be created at different times" — the tag marks the code moment, the release wraps it with documentation later, possibly much later.</p>
+
+<h2>Draft first — it costs nothing</h2>
+
+<div class="note">
+  <span class="label">The safe default</span>
+  A release doesn't have to go live the moment you start it. Save it as a <strong>draft</strong> — visible only to you, editable, deletable — attach assets, generate notes, then publish when it's actually ready. GitHub's own guidance: "it's recommended to create releases as drafts first, attach all assets, and then publish." Nothing below asks you to publish anything.
+</div>
+
+<h2>Web UI vs. CLI</h2>
+
+<table>
+  <tr><th>Web UI</th><th><code>gh</code> CLI</th></tr>
+  <tr><td>Repo → <strong>Releases</strong> → <span class="gui">Draft a new release</span></td><td><code>gh release create v0.1.0 --draft --generate-notes</code></td></tr>
+  <tr><td>Choose or type a tag, e.g. <code>v0.1.0</code></td><td>same tag, as the first argument</td></tr>
+  <tr><td>Click <span class="gui">Generate release notes</span></td><td><code>--generate-notes</code> flag</td></tr>
+  <tr><td>Check <span class="gui">Set as a pre-release</span></td><td><code>--prerelease</code> flag</td></tr>
+</table>
+<p style="font-size:.85rem;color:var(--ink-soft)">CLI reference: <a href="https://cli.github.com/manual/gh_release_create">gh release create</a>. You already have <code>gh</code> available — same tool used to check this repo's visibility in an earlier lesson.</p>
+
+<h2>When is a release actually warranted?</h2>
+
+<p>GitHub's docs describe <em>what</em> a release is but stay quiet on <em>when</em> to cut one — that judgment call is yours. A working rule of thumb:</p>
+
+<table>
+  <tr><th>Cut a release when…</th><th>Just merge to main when…</th></tr>
+  <tr><td>Someone outside your own deploy pipeline needs to pin a specific version — a library consumer, a Docker tag, a downloadable tool</td><td>You're continuously deploying and the only "version" that matters is whatever's on main right now</td></tr>
+  <tr><td>You want a fixed rollback point with a changelog attached</td><td>Rollback already means "revert the commit" or "redeploy the previous deploy," no tag needed</td></tr>
+  <tr><td>You're shipping a milestone worth announcing (v1.0, a breaking change)</td><td>The change is routine, internal, and not something anyone would reference by version number</td></tr>
+</table>
+
+<p>This workspace's own repo is a practice ground, not a shipped library — nobody depends on a pinned version of it. So a release here is purely for practicing the mechanic, not because the repo needs one.</p>
+
+<div class="win">
+  <span class="label">Your win — draft a release, don't publish it</span>
+  <ol>
+    <li>Go to <a href="https://github.com/stianbranden/learning/releases/new">Releases → Draft a new release</a> on this repo.</li>
+    <li>Type a new tag — <code>v0.1.0</code> is fine — targeting <code>main</code>.</li>
+    <li>Click <span class="gui">Generate release notes</span> and read what it drafted from your commit history.</li>
+    <li>Leave it as a <strong>draft</strong> (don't click Publish) — you've now seen every piece of a release without putting anything live.</li>
+  </ol>
+  If you want to go further later, publishing is one click away — but the win here is understanding the anatomy, not shipping v0.1.0 of a learning repo.
+</div>
+
+<div class="quiz" data-quiz='[
+  {"q":"What does a GitHub release actually attach to under the hood?","a":["a single git commit","a specific pull request","the default branch tip","a milestone due date"],"correct":0,"why":"A release wraps one git tag, and a tag is a pointer to one exact commit — that commit stays fixed even if main moves on."},
+  {"q":"You have generated notes and attached a binary, but you are not ready for the public to see it. What should you do?","a":["publish it, then delete it","save it as a draft","mark it as latest","close the pull request"],"correct":1,"why":"A draft release is saved, editable, and invisible to others until you choose to publish it — the safe way to prepare a release ahead of time."},
+  {"q":"Which checkbox tells users a release may be unstable and not production-ready?","a":["Set as latest","Generate notes","This is a pre-release","Target branch"],"correct":2,"why":"The pre-release flag exists specifically to warn users the build may be unstable, distinct from the separate latest-release label."},
+  {"q":"Your team merges to main and deploys continuously; nobody outside the team ever installs a pinned version. Do you need a release for every merge?","a":["yes, every merge needs one","no, releases are for pinnable versions","yes, but only on Fridays","no, releases are Actions-only"],"correct":1,"why":"Releases exist to give external consumers a fixed, pinnable point. Continuous deploys with no outside consumers usually have nothing that needs pinning."}
+]'></div>
+
+<h2>Go deeper</h2>
+<p><strong>Primary source — read this one:</strong> <a href="https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases">GitHub Docs — About releases</a>. Covers tags, notes, assets, and pre-release/latest flags in full.</p>
+
+<div class="footer">
+  <p><strong>Previous:</strong> <a href="0006-insights-traffic.html">Lesson 06 — Insights &amp; Traffic</a> · <strong>Index:</strong> <a href="../index.html">all lessons</a></p>
+  <p class="no-print"><strong>Anything fuzzy?</strong> Ask your teacher — the agent in this workspace.</p>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
