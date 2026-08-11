@@ -70,5 +70,17 @@
   <dd>Lists and dicts can be changed in place (mutable). Tuples and strings cannot (immutable). Matters for: dict keys (must be immutable) and shared references.</dd>
 </dl>
 
+<h2>Strings &amp; Files</h2>
+<dl>
+  <dt>string slicing</dt>
+  <dd>Strings index and slice like lists (<code>s[0]</code>, <code>s[1:3]</code>) since a string is a sequence of characters — just an immutable one.</dd>
+
+  <dt>context manager</dt>
+  <dd>An object usable with <code>with obj as name:</code> that guarantees setup/cleanup around the block — most commonly <code>with open(path) as f:</code>, which closes the file automatically even if an exception occurs inside.</dd>
+
+  <dt>csv.DictReader</dt>
+  <dd>Standard-library CSV parser (<code>import csv</code>) that reads each row as a <code>dict</code> keyed by the header row, and correctly handles quoted fields containing commas — unlike hand-rolled <code>line.split(",")</code>. All values come back as strings; you convert types yourself.</dd>
+</dl>
+
 </body>
 </html>

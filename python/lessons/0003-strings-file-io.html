@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strings, Slicing &amp; File I/O</title>
+    <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+    <p class="eyebrow">Lesson 03 &middot; foundations</p>
+    <h1>Strings, Slicing &amp; File I/O</h1>
+    <p class="subtitle">The last stop before <code>pandas.read_csv</code> stops looking like magic.</p>
+
+    <p>Every dataset starts life as a file on disk — usually a <code>.csv</code> of raw text. Before pandas does the heavy lifting, you should know what it's doing underneath: opening a file, reading text, and splitting it into fields. That's this lesson.</p>
+
+    <h2>1. Strings are sequences too</h2>
+    <p>A string indexes and slices exactly like a list — because it <em>is</em> a sequence, just an immutable one of characters.</p>
+
+    <pre><code>ticker = "AAPL"
+
+first = ticker[0]      # "A"
+last  = ticker[-1]     # "L"
+sub   = ticker[1:3]    # "AP"  (same start:stop rules as lists)
+</code></pre>
+
+    <p>Common string methods you'll use constantly on real data:</p>
+    <pre><code>row = "  AAPL, 150.25, 1200000  "
+
+row.strip()             # "AAPL, 150.25, 1200000"  — drop leading/trailing whitespace
+row.strip().split(",")  # ["AAPL", " 150.25", " 1200000"] — split into a list
+"-".join(["A", "B"])    # "A-B" — the reverse of split
+
+"aapl".upper()          # "AAPL"
+"AAPL".lower()           # "aapl"
+"AAPL".startswith("A")  # True
+</code></pre>
+
+    <div class="note">
+        <span class="label">Note</span>
+        <code>.split(",")</code> on a raw line is literally what a CSV parser does per row, before pandas or the <code>csv</code> module handle the edge cases (quoted commas, embedded newlines) for you.
+    </div>
+
+    <h2>2. Opening a file: <code>with open(...)</code></h2>
+    <p>Files are opened with <code>open()</code> and should always be wrapped in a <code>with</code> block — it closes the file automatically, even if an error happens partway through.</p>
+
+    <pre><code>with open("prices.csv") as f:
+    contents = f.read()      # whole file as one string
+
+# or, line by line (the common case):
+with open("prices.csv") as f:
+    for line in f:
+        print(line.strip())  # strip() drops the trailing newline
+</code></pre>
+
+    <div class="warn">
+        <span class="label">Why <code>with</code>, not manual open/close</span>
+        Without <code>with</code>, you'd need <code>f = open(...)</code> then remember <code>f.close()</code> — and forget it the moment an exception fires. <code>with</code> is Python's <strong>context manager</strong> pattern: it guarantees cleanup on the way out, no matter how the block exits.
+    </div>
+
+    <h2>3. Parsing CSV properly: the <code>csv</code> module</h2>
+    <p><code>.split(",")</code> breaks the moment a field contains a comma inside quotes (e.g. <code>"Smith, John"</code>). The standard library's <code>csv</code> module handles that correctly — use it instead of hand-rolled splitting for anything real:</p>
+
+    <pre><code>import csv
+
+with open("prices.csv") as f:
+    reader = csv.DictReader(f)   # first row becomes field names automatically
+    for row in reader:
+        print(row["ticker"], row["price"])
+        # row is a dict: {"ticker": "AAPL", "price": "150.25", ...}
+</code></pre>
+
+    <div class="note">
+        <span class="label">Note</span>
+        Every value <code>csv.DictReader</code> gives you is a <strong>string</strong> — <code>"150.25"</code>, not <code>150.25</code>. You convert types yourself (<code>float(row["price"])</code>). This is exactly the "wrong types" cleanup step the mission calls out — pandas' <code>read_csv</code> does this type-guessing for you, which is why it exists.
+    </div>
+
+    <div class="quiz" data-title="Retrieval practice — answer before scrolling back" data-quiz='[
+        {
+            "q": "What does \"  AAPL  \".strip() return?",
+            "a": ["\"AAPL\"", "\"  AAPL\"", "\"AAPL  \""],
+            "correct": 0,
+            "why": "strip() removes leading AND trailing whitespace by default, leaving just the core content."
+        },
+        {
+            "q": "Why wrap file access in a with open(...) block instead of calling open() directly?",
+            "a": ["Guarantees file closes", "Makes reading faster", "Required by Python"],
+            "correct": 0,
+            "why": "with is a context manager: it guarantees the file is closed on exit, even if an exception happens inside the block."
+        },
+        {
+            "q": "What type are the values inside a dict returned by csv.DictReader?",
+            "a": ["Always strings", "Matches the CSV type", "Always integers"],
+            "correct": 0,
+            "why": "csv.DictReader reads raw text — every field comes back as a str. You convert types yourself (int(), float())."
+        },
+        {
+            "q": "Why prefer the csv module over line.split(\",\") for real files?",
+            "a": ["Handles quoted commas", "Runs much faster", "Works without import"],
+            "correct": 0,
+            "why": "split(\",\") breaks on a field like \"Smith, John\" that contains a comma inside quotes. The csv module parses that correctly."
+        },
+        {
+            "q": "Given ticker = \"AAPL\", what does ticker[1:3] return?",
+            "a": ["\"AP\"", "\"AAP\"", "\"PL\""],
+            "correct": 0,
+            "why": "Strings slice like lists: start included, stop excluded. Index 1 is A, index 2 is P, index 3 (L) is excluded."
+        }
+    ]'></div>
+
+    <h2>Do this now</h2>
+    <p>Create a small CSV and parse it back out:</p>
+    <ol>
+        <li>Save a file <code>trades.csv</code> with this content:
+            <pre><code>ticker,shares,price
+AAPL,10,150.25
+MSFT,5,310.00
+GOOG,2,2800.50</code></pre>
+        </li>
+        <li>Write a script that opens it with <code>csv.DictReader</code>.</li>
+        <li>For each row, convert <code>shares</code> and <code>price</code> to numbers and print the total value of that row (<code>shares &times; price</code>).</li>
+        <li>Sum all rows and print the grand total.</li>
+    </ol>
+
+    <details class="reveal">
+        <summary>Stuck? View a solution</summary>
+        <pre><code>import csv
+
+total = 0
+with open("trades.csv") as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        shares = int(row["shares"])
+        price = float(row["price"])
+        value = shares * price
+        print(f"{row['ticker']}: ${value:,.2f}")
+        total += value
+
+print(f"Total: ${total:,.2f}")
+</code></pre>
+    </details>
+
+    <div class="win">
+        <span class="label">Win</span>
+        You can now read a real file off disk, parse each row, and convert raw text into usable numbers — the exact steps <code>pandas.read_csv</code> automates. Next lesson: pandas itself, starting with loading this same CSV into a DataFrame in one line and seeing what it gives you for free.
+    </div>
+
+    <h2>Go deeper</h2>
+    <ul>
+        <li><a href="https://docs.python.org/3/tutorial/inputoutput.html#reading-and-writing-files" target="_blank">Python Official Docs: Reading and Writing Files</a></li>
+        <li><a href="https://docs.python.org/3/library/csv.html" target="_blank">Python Official Docs: csv — CSV File Reading and Writing</a></li>
+    </ul>
+
+    <div class="footer">
+      <p><strong>Primary source — read this one:</strong> <a href="https://docs.python.org/3/tutorial/inputoutput.html">The Python Tutorial §7, "Input and Output"</a>. Covers string formatting and file reading in authoritative detail this lesson compressed.</p>
+      <p><strong>Reference:</strong> <a href="../reference/python-glossary.html">Python Glossary</a> — terms introduced here: string slicing, context manager, csv.DictReader.</p>
+      <p><strong>Previous:</strong> <a href="0002-lists-dicts-tuples.html">Lesson 2 — Lists, Dicts &amp; Tuples</a></p>
+      <p><strong>Next up:</strong> pandas — loading this same CSV into a DataFrame.</p>
+      <p class="no-print"><strong>Stuck on anything?</strong> Ask your teacher — that's the agent in this workspace. Paste the exact error if something didn't run as described.</p>
+    </div>
+
+    <script src="../assets/quiz.js"></script>
+</body>
+</html>
